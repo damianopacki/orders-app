@@ -1,6 +1,6 @@
 # Notatki o pracy z AI
 
-Wybór stacku technologicznego , ustalenie zasad działania dla AI i struktury projektu - moje decyzje. AI implementowało to co zostało zaimplementowane. Po każdym etapie weryfikacja rozwiązań po mojej stronie.
+Wybór stacku technologicznego , ustalenie zasad działania dla AI i struktury projektu - moje decyzje. AI implementowało to co zostało zaplanowane. Po każdym etapie weryfikacja rozwiązań po mojej stronie.
 
 Kilka rzeczy po drodze odrzuciłem: pełną walidację runtime każdego pola z API (endpointy mają stały kontrakt, nie było po co), osobne DTO dla zamówień (miało identyczny kształt co model domenowy, czysty boilerplate) i barrel `index.ts` dla funkcji utils (ryzyko cyklicznych importów przy esbuildzie).
 
