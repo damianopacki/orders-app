@@ -6,6 +6,8 @@ import {
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
+import { Notifier } from './core/notifications/notifier';
+import { SonnerNotifier } from './core/notifications/sonner-notifier';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -13,6 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideHttpClient(withFetch()),
-    provideRouter(routes)
+    provideRouter(routes),
+    { provide: Notifier, useClass: SonnerNotifier }
   ]
 };
