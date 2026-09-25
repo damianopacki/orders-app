@@ -1,0 +1,26 @@
+@let isDark = themeService.theme() === 'dark';
+
+<div class="theme-toggle">
+  <span class="theme-toggle__label">
+    Aktualnie wybrany motyw: {{ isDark ? 'Ciemny' : 'Jasny' }}
+  </span>
+
+  <button
+    type="button"
+    class="theme-toggle__info"
+    aria-label="Motyw jest pobierany automatycznie z ustawień przeglądarki. Po ręcznej zmianie wybór zapisuje się w localStorage."
+    title="Motyw jest pobierany automatycznie z ustawień przeglądarki. Po ręcznej zmianie wybór zapisuje się w localStorage."
+  >
+    i
+  </button>
+
+  <button
+    type="button"
+    class="theme-toggle__button"
+    [attr.aria-pressed]="isDark"
+    [attr.aria-label]="isDark ? 'Przełącz na motyw jasny' : 'Przełącz na motyw ciemny'"
+    (click)="themeService.toggleTheme()"
+  >
+    Zmień motyw
+  </button>
+</div>

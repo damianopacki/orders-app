@@ -1,0 +1,28 @@
+@mixin dark-theme-tokens {
+  --color-bg: rgb(42, 56, 71);
+  --color-text: rgb(198, 210, 219);
+  --color-row-bg: rgba(14, 15, 26, 0.25);
+  --color-row-hover: rgba(53, 71, 89, 0.5);
+  --color-profit-positive: rgb(60, 193, 149);
+  --color-profit-negative: rgb(249, 76, 76);
+}
+
+:root[data-theme='light'] {
+  --color-bg: rgb(233, 237, 241);
+  --color-text: rgb(14, 15, 26);
+  --color-row-bg: rgb(220, 225, 229);
+  --color-row-hover: rgb(201, 209, 216);
+  --color-profit-positive: rgb(60, 193, 149);
+  --color-profit-negative: rgb(249, 76, 76);
+}
+
+:root[data-theme='dark'] {
+  @include dark-theme-tokens;
+}
+
+// Fallback dla pierwszego renderu zanim ThemeService ustawi [data-theme] na <html>.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include dark-theme-tokens;
+  }
+}

@@ -1,2 +1,5 @@
+<div class="app__theme-bar">
+  <app-theme-toggle />
+</div>
 <router-outlet />
-<ngx-sonner-toaster closeButton />
+<ngx-sonner-toaster closeButton [theme]="themeService.theme()" />

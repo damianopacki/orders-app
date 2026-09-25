@@ -17,7 +17,7 @@ Projekt jest oceniany pod kątem modułowości, poprawnej pracy z Angularem i ja
 4. **Nie zgaduj.** Nie zakładaj struktury danych ani API bibliotek z pamięci:
    - struktury JSON sprawdzaj, pobierając dane z endpointów,
    - API bibliotek sprawdzaj w dokumentacji lub typach w `node_modules`.
-   Jeśli wymaganie jest niejasne – zapytaj zamiast zakładać.
+     Jeśli wymaganie jest niejasne – zapytaj zamiast zakładać.
 5. **Zakończenie etapu.** Na końcu każdego etapu:
    - uruchom `ng lint`, `ng build` i `ng test --watch=false`, napraw wszystkie błędy i ostrzeżenia,
    - sprawdź „Kryteria ukończenia” etapu z `docs/PLAN.md`,
@@ -49,12 +49,12 @@ Proponowany commit message:
 
 ## Stack
 
-- Angular 21: standalone, zoneless, `ChangeDetectionStrategy.OnPush`
+- Angular 22: standalone, zoneless, `ChangeDetectionStrategy.OnPush`
 - TypeScript w trybie `strict`
 - Stan: `@ngrx/signals` (Signal Store)
-- Powiadomienia: `ngx-toastr` – wyłącznie za abstrakcją `Notifier`
+- Powiadomienia: `ngx-sonner` – wyłącznie za abstrakcją `Notifier`
 - Style: SCSS + BEM, motywy przez CSS custom properties
-- Testy: Vitest (domyślny runner w Angular 21)
+- Testy: Vitest (domyślny runner w Angular 22)
 - **Zakazane:** biblioteki tabel, Angular Material, `@angular/animations`
 
 ## Konwencje Angular
@@ -112,7 +112,7 @@ src/app/
 
 - Blok = komponent, np. `.orders-table`, `.orders-table__row`, `.orders-table__row--expanded`.
 - Kolory wyłącznie przez CSS custom properties z `src/styles/_themes.scss` – żadnych kolorów zapisanych na sztywno w komponentach.
-- Nie twórz klas kolidujących z ngx-toastr (`.toast`, `.toast-container`, `.toast-success` itp.). Nadpisania stylów toastra tylko w `src/styles/_toastr-overrides.scss` (świadomy wyjątek od BEM).
+- Nie twórz klas kolidujących z ngx-sonner (`.sonner-toast`, `[data-sonner-toaster]` itp.). Nadpisania stylów toastów tylko w `src/styles/_sonner-overrides.scss` (świadomy wyjątek od BEM).
 
 ## Bezpieczeństwo
 

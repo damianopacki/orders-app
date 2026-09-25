@@ -1,0 +1,14 @@
+// Dostraja paletę ngx-sonner do naszych tokenów motywu (src/styles/_themes.scss).
+// Zmienne --ngx-sonner-toast-* są odczytywane przez bibliotekę jako fallbacki
+// w jej wewnętrznych --normal-bg / --normal-text / --normal-border.
+:root[data-theme='light'] {
+  --ngx-sonner-toast-normal-background: var(--color-row-bg);
+  --ngx-sonner-toast-normal-color: var(--color-text);
+  --ngx-sonner-toast-normal-border-color: var(--color-row-hover);
+}
+
+:root[data-theme='dark'] {
+  --ngx-sonner-toast-dark-normal-background: var(--color-row-bg);
+  --ngx-sonner-toast-dark-normal-color: var(--color-text);
+  --ngx-sonner-toast-dark-normal-border-color: var(--color-row-hover);
+}

@@ -1,0 +1,39 @@
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text);
+
+  &__info {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    padding: 0;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background-color: transparent;
+    color: inherit;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.7rem;
+    font-style: italic;
+    line-height: 1;
+    cursor: help;
+    user-select: none;
+  }
+
+  &__button {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-row-hover);
+    border-radius: 0.25rem;
+    background-color: var(--color-row-bg);
+    color: var(--color-text);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-row-hover);
+    }
+  }
+}
