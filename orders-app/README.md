@@ -7,11 +7,12 @@ notatki o współpracy z AI: [`NOTES.md`](NOTES.md).
 
 ## Uruchomienie
 
-Wymagany Node.js w wersji zgodnej z Angularem 22 (LTS, np. 20+) i npm.
+Wymagany Node.js w wersji wspieranej przez Angulara 22 (`^22.22.3 || ^24.15.0 || >=26.0.0`)
+i npm.
 
 ```bash
-npm install
-ng serve
+npm ci
+npm start
 ```
 
 Aplikacja wystartuje pod `http://localhost:4200`. Dane pobierane są z publicznych endpointów
@@ -19,9 +20,10 @@ Aplikacja wystartuje pod `http://localhost:4200`. Dane pobierane są z publiczny
 jest połączenie z internetem.
 
 ```bash
-ng build              # build produkcyjny do dist/
-ng test --watch=false # testy jednostkowe (Vitest)
-ng lint                # ESLint (TS + szablony)
+npm run build              # build produkcyjny do dist/
+npm test -- --watch=false  # testy jednostkowe (Vitest)
+npm run lint               # ESLint (TS + szablony) + prettier --check
+npm run format             # formatowanie src/ Prettierem
 ```
 
 ## Architektura
@@ -30,7 +32,7 @@ ng lint                # ESLint (TS + szablony)
 src/app/
 ├── core/                 # singletony niezależne od domeny
 │   ├── api/              # HTTP (MarketDataApi, stałe endpointów)
-│   ├── websocket/        # QuotesSocket (kwotowania, auto-reconnect)
+│   ├── websocket/        # QuotesSocket (kwotowania, auto-reconnect, walidacja wiadomości)
 │   ├── notifications/    # Notifier (abstrakcja) + SonnerNotifier (adapter)
 │   └── theme/            # ThemeService (jasny/ciemny, zapamiętywanie wyboru)
 ├── features/orders/
@@ -47,7 +49,8 @@ src/app/
 ├── shared/
 │   ├── state/             # współdzielone signalStoreFeature (with-call-state)
 │   └── ui/                 # np. theme-toggle, trash-icon
-└── styles/                 # (w src/) tokeny motywów, override'y ngx-sonner
+└── styles/                 # (w src/) tokeny motywów, breakpointy, mixiny przycisków
+                            # i animacji, override'y ngx-sonner
 ```
 
 Podział na komponenty smart / prezentacyjne: tylko `orders-page` wstrzykuje store'y i
@@ -89,6 +92,24 @@ strukturę HTML tabeli wrapperem.
   rozkłada szerokości kolumn w zależności od trybu `border-collapse` i zawartości innych
   wierszy — w praktyce dało to kilka realnych, trudnych do przewidzenia błędów wizualnych
   podczas budowy tabeli. Jawne szerokości kolumn (`<colgroup>`) usuwają tę niedeterministyczność.
+- **„—” zamiast pustej komórki (i zamiast spinnera) przy braku profitu.** Serwer kwotowań
+  wysyła wyłącznie zmiany cen, bez stanu początkowego po subskrypcji. Pomiar dla wszystkich
+  108 symboli z `order-data.json`: po 2 s cenę miało 40, po 30 s — 61; reszta to głównie akcje
+  i indeksy z zamkniętych w tym czasie rynków, dla których cena może nie przyjść godzinami.
+  Spinner sugerowałby, że wartość zaraz się pojawi, więc komórka pokazuje „—” (z podpowiedzią
+  „Brak aktualnych notowań”) i przełącza się na liczbę, gdy tylko przyjdzie pierwsza cena.
+- **Subskrypcja wszystkich dostępnych symboli, nie tylko tych z otwartymi zleceniami.**
+  `quotes-sync` obserwuje `OrdersStore.availableSymbols` (symbole z `order-data.json`, czyli
+  dokładnie te, które można wybrać w formularzu), żeby formularz mógł uzupełnić aktualną cenę
+  także po zamknięciu ostatniego zlecenia danego symbolu. Koszt: lista się nie kurczy, więc
+  `/subscribe/removelist` jest w praktyce nieużywany — mechanizm diffu symboli zostaje, ale
+  realnie działa tylko przy ponownym załadowaniu danych.
+- **Walidacja danych z sieci: WebSocket tak, HTTP tylko typowanie.** Każda wiadomość WS
+  przechodzi przez `core/websocket/parse-quotes-message.ts`: niepoprawny JSON, nieznane
+  wiadomości i wpisy z brakującymi/niepoprawnymi polami są pomijane, zamiast zrywać strumień
+  (i wymuszać reconnect) albo wprowadzać `NaN` do profitu. Odpowiedzi HTTP to statyczne pliki
+  o stałym kontrakcie — są typowane na granicy `MarketDataApi` bez pełnej walidacji runtime
+  (uzasadnienie w [`NOTES.md`](NOTES.md)).
 
 ## Kompatybilność
 

@@ -7,7 +7,7 @@ Aplikacja Angular wyświetlająca pogrupowaną tabelę zleceń z profitem liczon
 
 Projekt jest oceniany pod kątem modułowości, poprawnej pracy z Angularem i jakości TypeScriptu. Wygląd nie jest oceniany, ale paleta kolorów jest obowiązkowa.
 
-**Status:** Etapy 0–10 z `docs/PLAN.md` są ukończone i zacommitowane — checklista wymagań z `docs/TASK.md` jest w `README.md`. Zasady pracy poniżej obowiązują też przy dalszych zmianach na tym repo, tylko już bez podziału na z góry ustalone etapy.
+**Status:** Etapy 0–10 z `docs/PLAN.md` są ukończone i zacommitowane. Zasady pracy poniżej obowiązują też przy dalszych zmianach na tym repo, tylko już bez podziału na z góry ustalone etapy.
 
 ---
 
