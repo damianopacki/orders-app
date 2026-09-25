@@ -1,0 +1,62 @@
+:host {
+  display: block;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  color: var(--color-text);
+
+  &__col--symbol {
+    width: 18%;
+  }
+
+  &__col--order-id {
+    width: 12%;
+  }
+
+  &__col--side {
+    width: 8%;
+  }
+
+  &__col--size {
+    width: 8%;
+  }
+
+  &__col--open-time {
+    width: 16%;
+  }
+
+  &__col--open-price {
+    width: 12%;
+  }
+
+  &__col--swap {
+    width: 10%;
+  }
+
+  &__col--profit {
+    width: 10%;
+  }
+
+  &__col--actions {
+    width: 6%;
+  }
+
+  th {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-row-hover);
+  }
+
+  tr[appOrderGroupRow],
+  tr[appOrderRow] {
+    background-color: var(--color-row-bg);
+
+    &:hover {
+      background-color: var(--color-row-hover);
+    }
+  }
+}

@@ -75,17 +75,17 @@ src/app/
 ├── core/                 # singletony niezależne od domeny
 │   ├── api/              # HTTP (MarketDataApi, stałe endpointów)
 │   ├── websocket/        # QuotesSocket
-│   ├── notifications/    # Notifier (abstrakcja) + ToastrNotifier (adapter)
+│   ├── notifications/    # Notifier (abstrakcja) + SonnerNotifier (adapter)
 │   └── theme/            # ThemeService
 ├── features/orders/
 │   ├── models/           # interfejsy i typy domenowe
 │   ├── utils/            # czyste funkcje (profit, grupowanie, formatowanie) + testy
 │   ├── state/            # Signal Store'y + synchronizacja kwotowań
-│   ├── orders-page/      # komponent smart
-│   ├── orders-table/     # prezentacyjny
-│   ├── order-group-row/  # prezentacyjny
-│   ├── order-row/        # prezentacyjny
-│   └── add-order-form/
+│   └── orders-page/      # komponent smart + wszystko, co żyje wyłącznie w jego drzewie
+│       ├── orders-table/         # prezentacyjny
+│       │   ├── order-group-row/  # prezentacyjny
+│       │   └── order-row/        # prezentacyjny
+│       └── add-order-form/
 ├── shared/
 │   ├── state/            # współdzielone signalStoreFeature (np. call state)
 │   └── ui/               # np. theme-toggle

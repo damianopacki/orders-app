@@ -1,0 +1,42 @@
+<table class="orders-table">
+  <colgroup>
+    <col class="orders-table__col--symbol" />
+    <col class="orders-table__col--order-id" />
+    <col class="orders-table__col--side" />
+    <col class="orders-table__col--size" />
+    <col class="orders-table__col--open-time" />
+    <col class="orders-table__col--open-price" />
+    <col class="orders-table__col--swap" />
+    <col class="orders-table__col--profit" />
+    <col class="orders-table__col--actions" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th scope="col">Symbol</th>
+      <th scope="col">Order ID</th>
+      <th scope="col">Side</th>
+      <th scope="col">Size</th>
+      <th scope="col">Open Time</th>
+      <th scope="col">Open Price</th>
+      <th scope="col">Swap</th>
+      <th scope="col">Profit</th>
+      <th scope="col">Akcje</th>
+    </tr>
+  </thead>
+  @for (group of groups(); track group.symbol) {
+    <tbody>
+      <tr
+        appOrderGroupRow
+        [group]="group"
+        [showDivider]="!group.expanded"
+        (toggled)="toggleGroup.emit(group.symbol)"
+        (closed)="closeGroup.emit(group.symbol)"
+      ></tr>
+      @if (group.expanded) {
+        @for (row of group.rows; track row.order.id; let isLast = $last) {
+          <tr appOrderRow [row]="row" [showDivider]="isLast" (closed)="closeOrder.emit(row.order.id)"></tr>
+        }
+      }
+    </tbody>
+  }
+</table>

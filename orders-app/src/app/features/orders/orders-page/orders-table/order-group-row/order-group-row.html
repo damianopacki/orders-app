@@ -1,0 +1,31 @@
+<td class="order-group-row__symbol">
+  <span
+    class="order-group-row__chevron"
+    [class.order-group-row__chevron--expanded]="group().expanded"
+  ></span>
+  {{ group().symbol }}
+  <span class="order-group-row__badge">{{ group().summary.orderCount }}</span>
+</td>
+<td></td>
+<td></td>
+<td>{{ group().summary.totalSize | number: quantityFormat }}</td>
+<td></td>
+<td>{{ group().summary.averageOpenPrice | number: currencyFormat }}</td>
+<td>{{ group().summary.totalSwap | number: currencyFormat }}</td>
+<td
+  class="order-group-row__profit"
+  [class.order-group-row__profit--positive]="profitModifier() === 'positive'"
+  [class.order-group-row__profit--negative]="profitModifier() === 'negative'"
+>
+  {{ group().summary.totalProfit | number: currencyFormat }}
+</td>
+<td>
+  <button
+    type="button"
+    class="order-group-row__close"
+    [attr.aria-label]="'Zamknij grupę ' + group().symbol"
+    (click)="onClose($event)"
+  >
+    &times;
+  </button>
+</td>

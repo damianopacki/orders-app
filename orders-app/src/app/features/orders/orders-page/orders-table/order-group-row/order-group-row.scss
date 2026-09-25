@@ -1,0 +1,50 @@
+@use '../row-cell' as cell;
+
+:host {
+  cursor: pointer;
+}
+
+td {
+  @include cell.base-cell;
+}
+
+:host(.order-group-row--divider) td {
+  border-bottom-color: var(--color-row-hover);
+}
+
+.order-group-row {
+  &__symbol {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__chevron {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 0 4px 6px;
+    border-color: transparent transparent transparent currentColor;
+    transition: transform 0.15s ease;
+
+    &--expanded {
+      transform: rotate(90deg);
+    }
+  }
+
+  &__badge {
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background-color: var(--color-row-hover);
+    font-size: 0.75rem;
+  }
+
+  &__profit {
+    @include cell.profit-modifiers;
+  }
+
+  &__close {
+    @include cell.close-button;
+  }
+}

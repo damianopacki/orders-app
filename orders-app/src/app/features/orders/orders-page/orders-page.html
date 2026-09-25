@@ -1,0 +1,14 @@
+@switch (pageStatus()) {
+  @case ('loading') {
+    <p class="orders-page__status">Ładowanie danych…</p>
+  }
+  @case ('error') {
+    <p class="orders-page__status" role="alert">Nie udało się załadować danych. Spróbuj odświeżyć stronę.</p>
+  }
+  @case ('empty') {
+    <p class="orders-page__status">Brak zleceń do wyświetlenia.</p>
+  }
+  @default {
+    <app-orders-table [groups]="groups()" (toggleGroup)="ordersStore.toggleGroup($event)" />
+  }
+}

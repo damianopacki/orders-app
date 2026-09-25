@@ -1,0 +1,26 @@
+@mixin base-cell {
+  height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid transparent;
+}
+
+@mixin profit-modifiers {
+  &--positive {
+    color: var(--color-profit-positive);
+  }
+
+  &--negative {
+    color: var(--color-profit-negative);
+  }
+}
+
+@mixin close-button {
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}

@@ -1,0 +1,19 @@
+@use '../row-cell' as cell;
+
+td {
+  @include cell.base-cell;
+}
+
+:host(.order-row--divider) td {
+  border-bottom-color: var(--color-row-hover);
+}
+
+.order-row {
+  &__profit {
+    @include cell.profit-modifiers;
+  }
+
+  &__close {
+    @include cell.close-button;
+  }
+}

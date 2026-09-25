@@ -1,0 +1,24 @@
+<td></td>
+<td>{{ row().order.id }}</td>
+<td>{{ row().order.side }}</td>
+<td>{{ row().order.size | number: quantityFormat }}</td>
+<td>{{ row().order.openTime | date: 'dd.MM.yyyy HH:mm:ss' }}</td>
+<td>{{ row().order.openPrice | number: currencyFormat }}</td>
+<td>{{ row().order.swap | number: currencyFormat }}</td>
+<td
+  class="order-row__profit"
+  [class.order-row__profit--positive]="profitModifier() === 'positive'"
+  [class.order-row__profit--negative]="profitModifier() === 'negative'"
+>
+  {{ row().profit | number: currencyFormat }}
+</td>
+<td>
+  <button
+    type="button"
+    class="order-row__close"
+    [attr.aria-label]="'Zamknij zlecenie nr ' + row().order.id"
+    (click)="closed.emit()"
+  >
+    &times;
+  </button>
+</td>
