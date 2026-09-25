@@ -71,8 +71,7 @@ Projekt został wygenerowany przez `ng new`. Ten etap tylko go konfiguruje.
 - `OrdersStore`:
   - `withEntities<Order>()`, `expandedSymbols` (niemutowalna tablica).
   - `availableSymbols`: symbole z początkowego `order-data.json`, zapisywane przy ładowaniu. Formularz ma je oferować także po zamknięciu całej grupy.
-  - metody: `load()`, `addOrder()` (generuje ID jako `max + 1`), `removeOrder(id)`, `removeGroup(symbol)`, `toggleGroup(symbol)`,
-  - computed `activeSymbols`: unikalne symbole obecnych zleceń.
+  - metody: `load()`, `addOrder()` (generuje ID jako `max + 1`), `removeOrder(id)`, `removeGroup(symbol)`, `toggleGroup(symbol)`.
 - `QuotesStore`: `quotes: Record<symbol, Quote>`, metody `upsertQuotes(quotes)` i `removeQuotes(symbols)`.
 - Ładowanie przez `rxMethod` z obsługą błędów.
 - Testy store'ów z zamockowanym `MarketDataApi`.
@@ -94,7 +93,7 @@ Projekt został wygenerowany przez `ng new`. Ten etap tylko go konfiguruje.
   - Strumień kwotowań filtruje wiadomości po `p`.
   - Reconnect (`retry` z opóźnieniem). Po ponownym połączeniu ponownie subskrybuj aktualne symbole.
 - `features/orders/state/quotes-sync.ts`: synchronizacja subskrypcji.
-  - Obserwuje `OrdersStore.activeSymbols` i przez `diffSymbols` wysyła `addlist` / `removelist`.
+  - Obserwuje `OrdersStore.availableSymbols` i przez `diffSymbols` wysyła `addlist` / `removelist`. Zbiór obejmuje każdy symbol, który można wybrać w formularzu, więc formularz dostaje aktualną cenę także po zamknięciu ostatniego zlecenia danego symbolu.
   - Przychodzące kwotowania kieruje do `QuotesStore.upsertQuotes()`, a usunięte symbole do `removeQuotes()`.
   - Startuje z `orders-page` i zamyka się przez `DestroyRef`.
 - Testy z zamockowanym socketem.

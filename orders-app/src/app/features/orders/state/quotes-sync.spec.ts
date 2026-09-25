@@ -10,7 +10,7 @@ import { startQuotesSync } from './quotes-sync';
 
 describe('startQuotesSync', () => {
   function setup() {
-    const activeSymbols = signal<string[]>([]);
+    const availableSymbols = signal<string[]>([]);
     const upsertQuotes = vi.fn();
     const removeQuotes = vi.fn();
     const subscribeToSymbols = vi.fn();
@@ -19,7 +19,7 @@ describe('startQuotesSync', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: OrdersStore, useValue: { activeSymbols } },
+        { provide: OrdersStore, useValue: { availableSymbols } },
         { provide: QuotesStore, useValue: { upsertQuotes, removeQuotes } },
         { provide: QuotesSocket, useValue: { subscribeToSymbols, unsubscribeFromSymbols, quotes$ } },
       ],
@@ -27,37 +27,37 @@ describe('startQuotesSync', () => {
 
     TestBed.runInInjectionContext(() => startQuotesSync());
 
-    return { activeSymbols, upsertQuotes, removeQuotes, subscribeToSymbols, unsubscribeFromSymbols, quotes$ };
+    return { availableSymbols, upsertQuotes, removeQuotes, subscribeToSymbols, unsubscribeFromSymbols, quotes$ };
   }
 
-  it('subscribes to symbols that become active', () => {
-    const { activeSymbols, subscribeToSymbols } = setup();
+  it('subscribes to symbols that become available', () => {
+    const { availableSymbols, subscribeToSymbols } = setup();
 
-    activeSymbols.set(['BTCUSD', 'ETHUSD']);
+    availableSymbols.set(['BTCUSD', 'ETHUSD']);
     TestBed.tick();
 
     expect(subscribeToSymbols).toHaveBeenCalledWith(['BTCUSD', 'ETHUSD']);
   });
 
-  it('unsubscribes and clears quotes for symbols that are no longer active', () => {
-    const { activeSymbols, unsubscribeFromSymbols, removeQuotes } = setup();
+  it('unsubscribes and clears quotes for symbols that are no longer available', () => {
+    const { availableSymbols, unsubscribeFromSymbols, removeQuotes } = setup();
 
-    activeSymbols.set(['BTCUSD', 'ETHUSD']);
+    availableSymbols.set(['BTCUSD', 'ETHUSD']);
     TestBed.tick();
 
-    activeSymbols.set(['ETHUSD']);
+    availableSymbols.set(['ETHUSD']);
     TestBed.tick();
 
     expect(unsubscribeFromSymbols).toHaveBeenCalledWith(['BTCUSD']);
     expect(removeQuotes).toHaveBeenCalledWith(['BTCUSD']);
   });
 
-  it('does not resubscribe to symbols that were already active', () => {
-    const { activeSymbols, subscribeToSymbols } = setup();
+  it('does not resubscribe to symbols that were already available', () => {
+    const { availableSymbols, subscribeToSymbols } = setup();
 
-    activeSymbols.set(['BTCUSD']);
+    availableSymbols.set(['BTCUSD']);
     TestBed.tick();
-    activeSymbols.set(['BTCUSD']);
+    availableSymbols.set(['BTCUSD']);
     TestBed.tick();
 
     expect(subscribeToSymbols).toHaveBeenCalledTimes(1);

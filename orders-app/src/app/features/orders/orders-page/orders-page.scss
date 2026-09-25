@@ -1,3 +1,5 @@
+@use 'styles/buttons';
+
 .orders-page__status {
   margin-top: 2rem;
   color: var(--color-text);
@@ -9,13 +11,5 @@
   margin-bottom: 1.5rem;
   margin-left: auto;
   padding: 0.5rem 1rem;
-  border: 1px solid var(--color-text);
-  border-radius: 0.25rem;
-  background-color: var(--color-row-bg);
-  color: var(--color-text);
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--color-row-hover);
-  }
+  @include buttons.outlined-button;
 }

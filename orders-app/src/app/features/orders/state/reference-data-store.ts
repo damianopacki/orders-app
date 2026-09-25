@@ -1,10 +1,10 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { EMPTY, catchError, forkJoin, pipe, switchMap, tap } from 'rxjs';
+import { forkJoin, pipe, switchMap, tap } from 'rxjs';
 
 import { MarketDataApi } from '@core/api/market-data-api';
-import { withCallState } from '@shared/state/with-call-state';
+import { trackCallState, withCallState } from '@shared/state/with-call-state';
 import { buildContractSizeMap } from '@utils/build-contract-size-map';
 
 import type { ContractType } from '../models/contract-type';
@@ -36,14 +36,10 @@ export const ReferenceDataStore = signalStore(
             instruments: marketDataApi.getInstruments(),
             contractTypes: marketDataApi.getContractTypes(),
           }).pipe(
-            tap(({ instruments, contractTypes }) => {
-              patchState(store, { instruments, contractTypes });
-              store.setLoaded();
-            }),
-            catchError(() => {
-              store.setError();
-              return EMPTY;
-            }),
+            tap(({ instruments, contractTypes }) =>
+              patchState(store, { instruments, contractTypes }),
+            ),
+            trackCallState(store),
           ),
         ),
       ),

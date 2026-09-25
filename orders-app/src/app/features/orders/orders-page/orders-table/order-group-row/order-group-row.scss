@@ -8,9 +8,7 @@ td {
   @include cell.base-cell;
 }
 
-:host(.order-group-row--divider) td {
-  border-bottom-color: var(--color-row-hover);
-}
+@include cell.divider('order-group-row--divider');
 
 .order-group-row {
   &__symbol {

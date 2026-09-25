@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { Notifier } from '@core/notifications/notifier';
+import { formatAddedOrderMessage } from '@utils/format-added-order-message';
 import { formatClosedOrdersMessage } from '@utils/format-closed-orders-message';
 import { selectOrderGroups } from '@utils/select-order-groups';
 
-import type { Order } from '../models/order';
+import type { NewOrder } from '../models/order';
 import { OrdersStore } from '../state/orders-store';
 import { QuotesStore } from '../state/quotes-store';
 import { ReferenceDataStore } from '../state/reference-data-store';
@@ -65,8 +66,8 @@ export class OrdersPage {
     this.notifier.show(formatClosedOrdersMessage(removedIds), { type: 'success' });
   }
 
-  protected addOrder(order: Omit<Order, 'id'>): void {
+  protected addOrder(order: NewOrder): void {
     const created = this.ordersStore.addOrder(order);
-    this.notifier.show(`Dodano zlecenie nr ${created.id}`, { type: 'success' });
+    this.notifier.show(formatAddedOrderMessage(created.id), { type: 'success' });
   }
 }

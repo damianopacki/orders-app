@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, input, output, viewChild } from '@angular/core';
 
-import type { Order } from '../../models/order';
+import type { NewOrder } from '../../models/order';
 import type { Quote } from '../../models/quote';
 import { AddOrderForm } from '../add-order-form/add-order-form';
 
@@ -14,7 +14,7 @@ import { AddOrderForm } from '../add-order-form/add-order-form';
 export class AddOrderDialog {
   readonly availableSymbols = input.required<readonly string[]>();
   readonly quotesBySymbol = input.required<Readonly<Record<string, Quote>>>();
-  readonly submitted = output<Omit<Order, 'id'>>();
+  readonly submitted = output<NewOrder>();
 
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
 
@@ -26,7 +26,7 @@ export class AddOrderDialog {
     this.dialog().nativeElement.close();
   }
 
-  protected onSubmitted(order: Omit<Order, 'id'>): void {
+  protected onSubmitted(order: NewOrder): void {
     this.submitted.emit(order);
     this.close();
   }

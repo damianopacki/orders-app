@@ -1,3 +1,4 @@
+@use 'styles/motion';
 @use '../row-cell' as cell;
 
 @keyframes order-row-enter {
@@ -15,20 +16,18 @@
 }
 
 :host(.order-row-enter) {
-  animation: order-row-enter 0.18s ease-out;
+  animation: order-row-enter motion.$duration-enter ease-out;
 }
 
 :host(.order-row-leave) {
-  animation: order-row-leave 0.15s ease-in;
+  animation: order-row-leave motion.$duration-leave ease-in;
 }
 
 td {
   @include cell.base-cell;
 }
 
-:host(.order-row--divider) td {
-  border-bottom-color: var(--color-row-hover);
-}
+@include cell.divider('order-row--divider');
 
 .order-row {
   &__profit {

@@ -1,4 +1,4 @@
-import type { QuoteMessage } from './quotes-socket';
+import type { Quote } from '../../features/orders/models/quote';
 import { QuotesSocket } from './quotes-socket';
 
 class FakeWebSocket {
@@ -92,7 +92,7 @@ describe('QuotesSocket', () => {
 
   it('emits mapped quotes only for /quotes/subscribed messages, ignoring others', () => {
     const quotesSocket = new QuotesSocket();
-    const received: QuoteMessage[][] = [];
+    const received: Quote[][] = [];
     quotesSocket.quotes$.subscribe((quotes) => received.push(quotes));
     currentSocket().simulateOpen();
 

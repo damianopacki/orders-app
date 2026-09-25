@@ -10,8 +10,28 @@ import {
 
 import { formatDateTimeLocal, parseDateTimeLocal } from '@utils/date-time-local';
 
-import type { Order, OrderSide } from '../../models/order';
+import type { NewOrder, OrderSide } from '../../models/order';
 import type { Quote } from '../../models/quote';
+
+const NEW_ORDER_SWAP = 0;
+
+interface AddOrderFormValue {
+  readonly symbol: string;
+  readonly side: OrderSide;
+  readonly size: number;
+  readonly openPrice: number;
+  readonly openTime: string;
+}
+
+function createInitialValue(): AddOrderFormValue {
+  return {
+    symbol: '',
+    side: 'BUY',
+    size: 0,
+    openPrice: 0,
+    openTime: formatDateTimeLocal(new Date()),
+  };
+}
 
 function positiveNumberValidator(control: AbstractControl<number>): ValidationErrors | null {
   return control.value > 0 ? null : { positiveNumber: true };
@@ -27,19 +47,25 @@ function positiveNumberValidator(control: AbstractControl<number>): ValidationEr
 export class AddOrderForm {
   readonly availableSymbols = input.required<readonly string[]>();
   readonly quotesBySymbol = input.required<Readonly<Record<string, Quote>>>();
-  readonly submitted = output<Omit<Order, 'id'>>();
+  readonly submitted = output<NewOrder>();
 
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  private readonly initialValue = createInitialValue();
 
   protected readonly form = this.formBuilder.group({
-    symbol: this.formBuilder.control('', Validators.required),
-    side: this.formBuilder.control<OrderSide>('BUY', Validators.required),
-    size: this.formBuilder.control(0, [Validators.required, positiveNumberValidator]),
-    openPrice: this.formBuilder.control(0, [Validators.required, positiveNumberValidator]),
-    openTime: this.formBuilder.control(formatDateTimeLocal(new Date()), Validators.required),
+    symbol: this.formBuilder.control(this.initialValue.symbol, Validators.required),
+    side: this.formBuilder.control<OrderSide>(this.initialValue.side, Validators.required),
+    size: this.formBuilder.control(this.initialValue.size, [Validators.required, positiveNumberValidator]),
+    openPrice: this.formBuilder.control(this.initialValue.openPrice, [
+      Validators.required,
+      positiveNumberValidator,
+    ]),
+    openTime: this.formBuilder.control(this.initialValue.openTime, Validators.required),
   });
 
-  private readonly selectedSymbol = toSignal(this.form.controls.symbol.valueChanges, { initialValue: '' });
+  private readonly selectedSymbol = toSignal(this.form.controls.symbol.valueChanges, {
+    initialValue: this.initialValue.symbol,
+  });
   private readonly currentBid = computed(() => this.quotesBySymbol()[this.selectedSymbol()]?.bid);
   private autoFilledForSymbol: string | null = null;
 
@@ -75,15 +101,11 @@ export class AddOrderForm {
       size: value.size,
       openPrice: value.openPrice,
       openTime: parseDateTimeLocal(value.openTime),
-      swap: 0,
+      swap: NEW_ORDER_SWAP,
     });
 
-    this.form.reset({
-      symbol: '',
-      side: 'BUY',
-      size: 0,
-      openPrice: 0,
-      openTime: formatDateTimeLocal(new Date()),
-    });
+    this.form.reset(createInitialValue());
+    // Re-arm auto-fill, so picking the same symbol again fills in its current price.
+    this.autoFilledForSymbol = null;
   }
 }

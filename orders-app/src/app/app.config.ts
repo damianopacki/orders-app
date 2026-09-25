@@ -1,13 +1,14 @@
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
-import { Notifier } from './core/notifications/notifier';
-import { SonnerNotifier } from './core/notifications/sonner-notifier';
+import { Notifier } from '@core/notifications/notifier';
+import { SonnerNotifier } from '@core/notifications/sonner-notifier';
+
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -16,6 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideHttpClient(withFetch()),
     provideRouter(routes),
-    { provide: Notifier, useClass: SonnerNotifier }
-  ]
+    { provide: Notifier, useClass: SonnerNotifier },
+  ],
 };

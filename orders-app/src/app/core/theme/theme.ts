@@ -5,6 +5,7 @@ export type Theme = 'light' | 'dark';
 
 const THEME_STORAGE_KEY = 'orders-app-theme';
 const DARK_SCHEME_QUERY = '(prefers-color-scheme: dark)';
+const THEME_ATTRIBUTE = 'data-theme';
 
 function readStoredTheme(): Theme | null {
   const stored = localStorage.getItem(THEME_STORAGE_KEY);
@@ -28,7 +29,7 @@ export class ThemeService {
 
     effect(() => {
       const theme = this.themeSignal();
-      this.document.documentElement.setAttribute('data-theme', theme);
+      this.document.documentElement.setAttribute(THEME_ATTRIBUTE, theme);
       this.document.documentElement.style.colorScheme = theme;
     });
 

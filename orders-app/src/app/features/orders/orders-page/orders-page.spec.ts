@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 
 import { Notifier } from '@core/notifications/notifier';
 import { QuotesSocket } from '@core/websocket/quotes-socket';
+import type { CallStatus } from '@shared/state/with-call-state';
 
 import type { Order } from '../models/order';
 import { OrdersStore } from '../state/orders-store';
@@ -24,8 +25,8 @@ describe('OrdersPage', () => {
   let removeGroup: ReturnType<typeof vi.fn>;
   let addOrder: ReturnType<typeof vi.fn>;
   let notifierShow: ReturnType<typeof vi.fn>;
-  let ordersCallStatus: ReturnType<typeof signal<'idle' | 'loading' | 'loaded' | 'error'>>;
-  let referenceDataCallStatus: ReturnType<typeof signal<'idle' | 'loading' | 'loaded' | 'error'>>;
+  let ordersCallStatus: ReturnType<typeof signal<CallStatus>>;
+  let referenceDataCallStatus: ReturnType<typeof signal<CallStatus>>;
 
   function setup(initialOrders: Order[] = [], expandedSymbols: string[] = []): void {
     ordersLoad = vi.fn();
@@ -45,7 +46,6 @@ describe('OrdersPage', () => {
           useValue: {
             entities: signal(initialOrders),
             expandedSymbols: signal(expandedSymbols),
-            activeSymbols: signal<string[]>([]),
             availableSymbols: signal(['BTCUSD']),
             callStatus: ordersCallStatus,
             load: ordersLoad,

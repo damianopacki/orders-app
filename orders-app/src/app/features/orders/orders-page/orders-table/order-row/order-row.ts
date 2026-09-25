@@ -2,7 +2,11 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { getProfitModifier } from '@utils/get-profit-modifier';
-import { CURRENCY_DECIMAL_FORMAT, QUANTITY_DECIMAL_FORMAT } from '@utils/number-format';
+import {
+  CURRENCY_DECIMAL_FORMAT,
+  ORDER_TIME_FORMAT,
+  QUANTITY_DECIMAL_FORMAT,
+} from '@utils/display-formats';
 import type { OrderRowViewModel } from '@utils/select-order-groups';
 
 import { TrashIcon } from '@shared/ui/trash-icon/trash-icon';
@@ -27,4 +31,5 @@ export class OrderRow {
 
   protected readonly quantityFormat = QUANTITY_DECIMAL_FORMAT;
   protected readonly currencyFormat = CURRENCY_DECIMAL_FORMAT;
+  protected readonly timeFormat = ORDER_TIME_FORMAT;
 }

@@ -10,6 +10,8 @@ export interface Order {
   readonly swap: number;
 }
 
+export type NewOrder = Omit<Order, 'id'>;
+
 export interface OrdersResponseDto {
   readonly data: readonly Order[];
 }

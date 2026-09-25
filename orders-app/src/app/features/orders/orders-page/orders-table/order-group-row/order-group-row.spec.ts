@@ -79,6 +79,22 @@ describe('OrderGroupRow', () => {
     expect(toggleSpy).toHaveBeenCalledTimes(3);
   });
 
+  it('does not toggle or block native activation for Enter/Space on the close button', () => {
+    const host = setup(buildGroup());
+    const toggleSpy = vi.fn();
+    fixture.componentInstance.toggled.subscribe(toggleSpy);
+    const closeButton = host.querySelector('.order-group-row__close')!;
+
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+    closeButton.dispatchEvent(enter);
+    closeButton.dispatchEvent(space);
+
+    expect(toggleSpy).not.toHaveBeenCalled();
+    expect(enter.defaultPrevented).toBe(false);
+    expect(space.defaultPrevented).toBe(false);
+  });
+
   it('shows the divider only when showDivider is true', () => {
     expect(setup(buildGroup(), true).classList.contains('order-group-row--divider')).toBe(true);
     expect(setup(buildGroup(), false).classList.contains('order-group-row--divider')).toBe(false);

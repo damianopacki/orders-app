@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { getProfitModifier } from '@utils/get-profit-modifier';
-import { CURRENCY_DECIMAL_FORMAT, QUANTITY_DECIMAL_FORMAT } from '@utils/number-format';
+import { CURRENCY_DECIMAL_FORMAT, QUANTITY_DECIMAL_FORMAT } from '@utils/display-formats';
 import type { OrderGroupViewModel } from '@utils/select-order-groups';
 
 import { TrashIcon } from '@shared/ui/trash-icon/trash-icon';
@@ -19,8 +19,8 @@ import { TrashIcon } from '@shared/ui/trash-icon/trash-icon';
     '[class.order-group-row--divider]': 'showDivider()',
     '[attr.aria-expanded]': 'group().expanded',
     '(click)': 'toggled.emit()',
-    '(keydown.enter)': 'toggled.emit()',
-    '(keydown.space)': 'onSpace($event)',
+    '(keydown.enter)': 'onToggleKey($event)',
+    '(keydown.space)': 'onToggleKey($event)',
   },
 })
 export class OrderGroupRow {
@@ -34,7 +34,13 @@ export class OrderGroupRow {
   protected readonly quantityFormat = QUANTITY_DECIMAL_FORMAT;
   protected readonly currencyFormat = CURRENCY_DECIMAL_FORMAT;
 
-  protected onSpace(event: Event): void {
+  protected onToggleKey(event: Event): void {
+    // Keys pressed on the close button bubble up here — leave them to the button's
+    // native activation instead of toggling (and blocking Space via preventDefault).
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+
     event.preventDefault();
     this.toggled.emit();
   }

@@ -1,13 +1,15 @@
-import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { inject } from '@angular/core';
+import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { addEntity, removeEntities, removeEntity, setAllEntities, withEntities } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { EMPTY, catchError, pipe, switchMap, tap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 
 import { MarketDataApi } from '@core/api/market-data-api';
-import { withCallState } from '@shared/state/with-call-state';
+import { trackCallState, withCallState } from '@shared/state/with-call-state';
+import { getNextOrderId } from '@utils/get-next-order-id';
+import { compareSymbols, getUniqueSymbols } from '@utils/get-unique-symbols';
 
-import type { Order } from '../models/order';
+import type { NewOrder, Order } from '../models/order';
 
 interface OrdersAdditionalState {
   readonly expandedSymbols: string[];
@@ -19,14 +21,15 @@ const initialState: OrdersAdditionalState = {
   availableSymbols: [],
 };
 
+function withoutSymbol(symbols: readonly string[], symbol: string): string[] {
+  return symbols.filter((existing) => existing !== symbol);
+}
+
 export const OrdersStore = signalStore(
   { providedIn: 'root' },
   withEntities<Order>(),
   withState(initialState),
   withCallState(),
-  withComputed(({ entities }) => ({
-    activeSymbols: computed(() => Array.from(new Set(entities().map((order) => order.symbol)))),
-  })),
   withMethods((store, marketDataApi = inject(MarketDataApi)) => ({
     load: rxMethod<void>(
       pipe(
@@ -34,25 +37,17 @@ export const OrdersStore = signalStore(
         switchMap(() =>
           marketDataApi.getOrders().pipe(
             tap((orders) => {
-              patchState(store, setAllEntities(orders));
-              patchState(store, {
-                availableSymbols: Array.from(new Set(orders.map((order) => order.symbol))).sort((a, b) =>
-                  a.localeCompare(b),
-                ),
+              patchState(store, setAllEntities(orders), {
+                availableSymbols: getUniqueSymbols(orders).sort(compareSymbols),
               });
-              store.setLoaded();
             }),
-            catchError(() => {
-              store.setError();
-              return EMPTY;
-            }),
+            trackCallState(store),
           ),
         ),
       ),
     ),
-    addOrder(order: Omit<Order, 'id'>): Order {
-      const nextId = Math.max(0, ...store.entities().map((existing) => existing.id)) + 1;
-      const newOrder: Order = { ...order, id: nextId };
+    addOrder(order: NewOrder): Order {
+      const newOrder: Order = { ...order, id: getNextOrderId(store.entities()) };
       patchState(store, addEntity(newOrder));
       return newOrder;
     },
@@ -65,9 +60,8 @@ export const OrdersStore = signalStore(
         .filter((order) => order.symbol === symbol)
         .map((order) => order.id);
 
-      patchState(store, removeEntities(idsToRemove));
-      patchState(store, {
-        expandedSymbols: store.expandedSymbols().filter((expanded) => expanded !== symbol),
+      patchState(store, removeEntities(idsToRemove), {
+        expandedSymbols: withoutSymbol(store.expandedSymbols(), symbol),
       });
 
       return idsToRemove;
@@ -76,7 +70,7 @@ export const OrdersStore = signalStore(
       const expandedSymbols = store.expandedSymbols();
       patchState(store, {
         expandedSymbols: expandedSymbols.includes(symbol)
-          ? expandedSymbols.filter((expanded) => expanded !== symbol)
+          ? withoutSymbol(expandedSymbols, symbol)
           : [...expandedSymbols, symbol],
       });
     },

@@ -1,6 +1,7 @@
 import type { Order } from '../models/order';
 import type { Quote } from '../models/quote';
 import { calculateProfit } from './calculate-profit';
+import { compareSymbols } from './get-unique-symbols';
 import { groupOrdersBySymbol } from './group-orders-by-symbol';
 import { summarizeGroup, type OrderGroupSummary } from './summarize-group';
 
@@ -24,8 +25,8 @@ export function selectOrderGroups(
 ): OrderGroupViewModel[] {
   const expandedSymbolSet = new Set(expandedSymbols);
 
-  return [...groupOrdersBySymbol(orders)]
-    .sort((a, b) => a.symbol.localeCompare(b.symbol))
+  return groupOrdersBySymbol(orders)
+    .sort((a, b) => compareSymbols(a.symbol, b.symbol))
     .map(({ symbol, orders: groupOrders }) => {
       const bid = quotesBySymbol[symbol]?.bid;
       const contractSize = contractSizeBySymbol[symbol];

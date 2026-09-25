@@ -2,7 +2,7 @@
 <td>{{ row().order.id }}</td>
 <td>{{ row().order.side }}</td>
 <td>{{ row().order.size | number: quantityFormat }}</td>
-<td>{{ row().order.openTime | date: 'dd.MM.yyyy HH:mm:ss' }}</td>
+<td>{{ row().order.openTime | date: timeFormat }}</td>
 <td>{{ row().order.openPrice | number: currencyFormat }}</td>
 <td>{{ row().order.swap | number: currencyFormat }}</td>
 <td

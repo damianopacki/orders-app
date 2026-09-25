@@ -35,7 +35,6 @@ describe('OrdersStore', () => {
     expect(store.callStatus()).toBe('loaded');
     expect(store.entities()).toEqual(orders);
     expect(store.availableSymbols()).toEqual(['BTCUSD', 'ETHUSD']);
-    expect(store.activeSymbols()).toEqual(['BTCUSD', 'ETHUSD']);
   });
 
   it('sorts available symbols alphabetically', () => {
@@ -124,7 +123,6 @@ describe('OrdersStore', () => {
     store.removeGroup('BTCUSD');
 
     expect(store.availableSymbols()).toEqual(['BTCUSD', 'ETHUSD']);
-    expect(store.activeSymbols()).toEqual(['ETHUSD']);
   });
 
   it('toggleGroup expands and collapses a symbol', () => {

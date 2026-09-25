@@ -15,7 +15,10 @@ export function startQuotesSync(): void {
 
   let previousSymbols: readonly string[] = [];
 
-  toObservable(ordersStore.activeSymbols)
+  // Every symbol the add-order form can pick, not just ones with open orders — so the
+  // form can prefill the current price even after a symbol's last order was closed.
+  // Open orders can only use these symbols, so their profits stay covered too.
+  toObservable(ordersStore.availableSymbols)
     .pipe(takeUntilDestroyed(destroyRef))
     .subscribe((currentSymbols) => {
       const { added, removed } = diffSymbols(previousSymbols, currentSymbols);

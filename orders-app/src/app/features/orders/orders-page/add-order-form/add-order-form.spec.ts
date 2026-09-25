@@ -145,6 +145,20 @@ describe('AddOrderForm', () => {
     expect(select('side').value).toBe('BUY');
   });
 
+  it('fills openPrice again when the same symbol is picked after a submit', () => {
+    setup(['BTCUSD'], { BTCUSD: { symbol: 'BTCUSD', bid: 100, ask: 101, timestamp: 0 } });
+
+    setValue(select('symbol'), 'BTCUSD');
+    setValue(input('size'), '1');
+    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+    expect(input('openPrice').value).toBe('0');
+
+    setValue(select('symbol'), 'BTCUSD');
+
+    expect(input('openPrice').value).toBe('100');
+  });
+
   it('does not emit when the form is invalid', () => {
     setup();
     const submittedSpy = vi.fn();
