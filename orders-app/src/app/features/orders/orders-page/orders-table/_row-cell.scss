@@ -1,6 +1,13 @@
 @mixin base-cell {
-  height: 2.5rem;
+  // Chromium computes an empty/plain-text table cell's *minimum* height from the
+  // system font's own metrics, ignoring an author line-height for that specific
+  // calculation — so a cell holding a flex child (which has no such font-metric floor)
+  // can end up shorter than its plain-text siblings even with matching line-height.
+  // Fix: pick a height comfortably above that floor so every cell grows to the same
+  // explicit value instead of racing to find each one's real natural minimum.
+  height: 3.75rem;
   padding: 0.5rem 0.75rem;
+  line-height: 1.25rem;
   text-align: left;
   vertical-align: middle;
   border-bottom: 1px solid transparent;

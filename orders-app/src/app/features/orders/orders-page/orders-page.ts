@@ -4,10 +4,12 @@ import { Notifier } from '@core/notifications/notifier';
 import { formatClosedOrdersMessage } from '@utils/format-closed-orders-message';
 import { selectOrderGroups } from '@utils/select-order-groups';
 
+import type { Order } from '../models/order';
 import { OrdersStore } from '../state/orders-store';
 import { QuotesStore } from '../state/quotes-store';
 import { ReferenceDataStore } from '../state/reference-data-store';
 import { startQuotesSync } from '../state/quotes-sync';
+import { AddOrderDialog } from './add-order-dialog/add-order-dialog';
 import { OrdersTable } from './orders-table/orders-table';
 
 type PageStatus = 'loading' | 'error' | 'empty' | 'ready';
@@ -17,7 +19,7 @@ type PageStatus = 'loading' | 'error' | 'empty' | 'ready';
   templateUrl: './orders-page.html',
   styleUrl: './orders-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [OrdersTable],
+  imports: [OrdersTable, AddOrderDialog],
 })
 export class OrdersPage {
   protected readonly ordersStore = inject(OrdersStore);
@@ -61,5 +63,10 @@ export class OrdersPage {
   protected closeGroup(symbol: string): void {
     const removedIds = this.ordersStore.removeGroup(symbol);
     this.notifier.show(formatClosedOrdersMessage(removedIds), { type: 'success' });
+  }
+
+  protected addOrder(order: Omit<Order, 'id'>): void {
+    const created = this.ordersStore.addOrder(order);
+    this.notifier.show(`Dodano zlecenie nr ${created.id}`, { type: 'success' });
   }
 }

@@ -1,0 +1,48 @@
+<form class="add-order-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="add-order-form__field">
+    <label for="add-order-symbol">Symbol</label>
+    <select id="add-order-symbol" formControlName="symbol">
+      <option value="" disabled>Wybierz symbol</option>
+      @for (symbol of availableSymbols(); track symbol) {
+        <option [value]="symbol">{{ symbol }}</option>
+      }
+    </select>
+    @if (hasError(form.controls.symbol)) {
+      <p class="add-order-form__error">Wybierz symbol.</p>
+    }
+  </div>
+
+  <div class="add-order-form__field">
+    <label for="add-order-side">Strona</label>
+    <select id="add-order-side" formControlName="side">
+      <option value="BUY">BUY</option>
+      <option value="SELL">SELL</option>
+    </select>
+  </div>
+
+  <div class="add-order-form__field">
+    <label for="add-order-size">Wielkość</label>
+    <input id="add-order-size" type="number" step="any" formControlName="size" />
+    @if (hasError(form.controls.size)) {
+      <p class="add-order-form__error">Podaj wartość większą od zera.</p>
+    }
+  </div>
+
+  <div class="add-order-form__field">
+    <label for="add-order-open-price">Cena otwarcia</label>
+    <input id="add-order-open-price" type="number" step="any" formControlName="openPrice" />
+    @if (hasError(form.controls.openPrice)) {
+      <p class="add-order-form__error">Podaj wartość większą od zera.</p>
+    }
+  </div>
+
+  <div class="add-order-form__field">
+    <label for="add-order-open-time">Data otwarcia</label>
+    <input id="add-order-open-time" type="datetime-local" formControlName="openTime" />
+    @if (hasError(form.controls.openTime)) {
+      <p class="add-order-form__error">Podaj datę otwarcia.</p>
+    }
+  </div>
+
+  <button type="submit" class="add-order-form__submit" [disabled]="form.invalid">Dodaj zlecenie</button>
+</form>

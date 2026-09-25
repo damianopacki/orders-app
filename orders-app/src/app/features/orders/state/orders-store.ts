@@ -46,9 +46,11 @@ export const OrdersStore = signalStore(
         ),
       ),
     ),
-    addOrder(order: Omit<Order, 'id'>): void {
+    addOrder(order: Omit<Order, 'id'>): Order {
       const nextId = Math.max(0, ...store.entities().map((existing) => existing.id)) + 1;
-      patchState(store, addEntity({ ...order, id: nextId }));
+      const newOrder: Order = { ...order, id: nextId };
+      patchState(store, addEntity(newOrder));
+      return newOrder;
     },
     removeOrder(id: number): void {
       patchState(store, removeEntity(id));

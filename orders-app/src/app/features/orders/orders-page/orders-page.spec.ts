@@ -22,6 +22,7 @@ describe('OrdersPage', () => {
   let toggleGroup: ReturnType<typeof vi.fn>;
   let removeOrder: ReturnType<typeof vi.fn>;
   let removeGroup: ReturnType<typeof vi.fn>;
+  let addOrder: ReturnType<typeof vi.fn>;
   let notifierShow: ReturnType<typeof vi.fn>;
   let ordersCallStatus: ReturnType<typeof signal<'idle' | 'loading' | 'loaded' | 'error'>>;
   let referenceDataCallStatus: ReturnType<typeof signal<'idle' | 'loading' | 'loaded' | 'error'>>;
@@ -32,6 +33,7 @@ describe('OrdersPage', () => {
     toggleGroup = vi.fn();
     removeOrder = vi.fn();
     removeGroup = vi.fn(() => [1, 2]);
+    addOrder = vi.fn((order: Omit<Order, 'id'>) => ({ ...order, id: 42 }));
     notifierShow = vi.fn();
     ordersCallStatus = signal('loaded');
     referenceDataCallStatus = signal('loaded');
@@ -44,11 +46,13 @@ describe('OrdersPage', () => {
             entities: signal(initialOrders),
             expandedSymbols: signal(expandedSymbols),
             activeSymbols: signal<string[]>([]),
+            availableSymbols: signal(['BTCUSD']),
             callStatus: ordersCallStatus,
             load: ordersLoad,
             toggleGroup,
             removeOrder,
             removeGroup,
+            addOrder,
           },
         },
         {
@@ -137,5 +141,35 @@ describe('OrdersPage', () => {
 
     expect(removeGroup).toHaveBeenCalledWith('BTCUSD');
     expect(notifierShow).toHaveBeenCalledWith('Zamknięto zlecenie nr 1, 2', { type: 'success' });
+  });
+
+  it('shows the add-order form even when there are no orders', () => {
+    setup([]);
+
+    expect(fixture.nativeElement.querySelector('form.add-order-form')).toBeTruthy();
+  });
+
+  it('adds an order via the form and shows a success notification with the new id', () => {
+    setup([]);
+
+    const symbolSelect: HTMLSelectElement = fixture.nativeElement.querySelector('select[formControlName="symbol"]');
+    symbolSelect.value = 'BTCUSD';
+    symbolSelect.dispatchEvent(new Event('input'));
+    symbolSelect.dispatchEvent(new Event('change'));
+
+    const sizeInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="size"]');
+    sizeInput.value = '1';
+    sizeInput.dispatchEvent(new Event('input'));
+
+    const priceInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="openPrice"]');
+    priceInput.value = '100';
+    priceInput.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('form.add-order-form').dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(addOrder).toHaveBeenCalledWith(expect.objectContaining({ symbol: 'BTCUSD', size: 1, openPrice: 100 }));
+    expect(notifierShow).toHaveBeenCalledWith('Dodano zlecenie nr 42', { type: 'success' });
   });
 });

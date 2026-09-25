@@ -1,3 +1,13 @@
+@if (pageStatus() !== 'loading' && pageStatus() !== 'error') {
+  <button type="button" class="orders-page__add-button" (click)="addOrderDialog.open()">Dodaj zlecenie</button>
+  <app-add-order-dialog
+    #addOrderDialog
+    [availableSymbols]="ordersStore.availableSymbols()"
+    [quotesBySymbol]="quotesStore.quotes()"
+    (submitted)="addOrder($event)"
+  />
+}
+
 @switch (pageStatus()) {
   @case ('loading') {
     <p class="orders-page__status">Ładowanie danych…</p>

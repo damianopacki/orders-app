@@ -51,9 +51,9 @@ describe('OrdersStore', () => {
     const store = setup({ getOrders: () => of([buildOrder({ id: 1 }), buildOrder({ id: 5 })]) });
     store.load();
 
-    store.addOrder({ symbol: 'ETHUSD', side: 'SELL', size: 1, openPrice: 10, openTime: 0, swap: 0 });
+    const created = store.addOrder({ symbol: 'ETHUSD', side: 'SELL', size: 1, openPrice: 10, openTime: 0, swap: 0 });
 
-    expect(store.entities().at(-1)).toEqual({
+    expect(created).toEqual({
       id: 6,
       symbol: 'ETHUSD',
       side: 'SELL',
@@ -62,6 +62,7 @@ describe('OrdersStore', () => {
       openTime: 0,
       swap: 0,
     });
+    expect(store.entities().at(-1)).toEqual(created);
   });
 
   it('addOrder assigns id 1 to the first order in an empty store', () => {

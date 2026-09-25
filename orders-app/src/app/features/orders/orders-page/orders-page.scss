@@ -3,3 +3,19 @@
   color: var(--color-text);
   text-align: center;
 }
+
+.orders-page__add-button {
+  display: block;
+  margin-bottom: 1.5rem;
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-text);
+  border-radius: 0.25rem;
+  background-color: var(--color-row-bg);
+  color: var(--color-text);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-row-hover);
+  }
+}
