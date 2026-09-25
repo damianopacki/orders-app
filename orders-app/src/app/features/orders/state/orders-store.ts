@@ -35,7 +35,11 @@ export const OrdersStore = signalStore(
           marketDataApi.getOrders().pipe(
             tap((orders) => {
               patchState(store, setAllEntities(orders));
-              patchState(store, { availableSymbols: Array.from(new Set(orders.map((order) => order.symbol))) });
+              patchState(store, {
+                availableSymbols: Array.from(new Set(orders.map((order) => order.symbol))).sort((a, b) =>
+                  a.localeCompare(b),
+                ),
+              });
               store.setLoaded();
             }),
             catchError(() => {

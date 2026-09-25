@@ -38,6 +38,19 @@ describe('OrdersStore', () => {
     expect(store.activeSymbols()).toEqual(['BTCUSD', 'ETHUSD']);
   });
 
+  it('sorts available symbols alphabetically', () => {
+    const orders = [
+      buildOrder({ id: 1, symbol: 'ETHUSD' }),
+      buildOrder({ id: 2, symbol: 'AAPL.US' }),
+      buildOrder({ id: 3, symbol: 'BTCUSD' }),
+    ];
+    const store = setup({ getOrders: () => of(orders) });
+
+    store.load();
+
+    expect(store.availableSymbols()).toEqual(['AAPL.US', 'BTCUSD', 'ETHUSD']);
+  });
+
   it('sets an error status when loading fails', () => {
     const store = setup({ getOrders: () => throwError(() => new Error('boom')) });
 

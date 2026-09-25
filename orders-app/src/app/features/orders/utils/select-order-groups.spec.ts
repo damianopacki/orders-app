@@ -61,4 +61,16 @@ describe('selectOrderGroups', () => {
   it('returns an empty array when there are no orders', () => {
     expect(selectOrderGroups([], {}, {}, [])).toEqual([]);
   });
+
+  it('sorts groups alphabetically by symbol', () => {
+    const orders = [
+      buildOrder({ id: 1, symbol: 'ETHUSD' }),
+      buildOrder({ id: 2, symbol: 'AAPL.US' }),
+      buildOrder({ id: 3, symbol: 'BTCUSD' }),
+    ];
+
+    const symbols = selectOrderGroups(orders, {}, {}, []).map((group) => group.symbol);
+
+    expect(symbols).toEqual(['AAPL.US', 'BTCUSD', 'ETHUSD']);
+  });
 });

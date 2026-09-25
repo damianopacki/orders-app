@@ -24,23 +24,25 @@ export function selectOrderGroups(
 ): OrderGroupViewModel[] {
   const expandedSymbolSet = new Set(expandedSymbols);
 
-  return groupOrdersBySymbol(orders).map(({ symbol, orders: groupOrders }) => {
-    const bid = quotesBySymbol[symbol]?.bid;
-    const contractSize = contractSizeBySymbol[symbol];
+  return [...groupOrdersBySymbol(orders)]
+    .sort((a, b) => a.symbol.localeCompare(b.symbol))
+    .map(({ symbol, orders: groupOrders }) => {
+      const bid = quotesBySymbol[symbol]?.bid;
+      const contractSize = contractSizeBySymbol[symbol];
 
-    const rows: OrderRowViewModel[] = groupOrders.map((order) => ({
-      order,
-      profit: calculateProfit(order, bid, contractSize),
-    }));
+      const rows: OrderRowViewModel[] = groupOrders.map((order) => ({
+        order,
+        profit: calculateProfit(order, bid, contractSize),
+      }));
 
-    return {
-      symbol,
-      summary: summarizeGroup(
-        groupOrders,
-        rows.map((row) => row.profit),
-      ),
-      expanded: expandedSymbolSet.has(symbol),
-      rows,
-    };
-  });
+      return {
+        symbol,
+        summary: summarizeGroup(
+          groupOrders,
+          rows.map((row) => row.profit),
+        ),
+        expanded: expandedSymbolSet.has(symbol),
+        rows,
+      };
+    });
 }
