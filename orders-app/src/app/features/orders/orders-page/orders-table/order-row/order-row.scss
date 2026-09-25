@@ -1,5 +1,27 @@
 @use '../row-cell' as cell;
 
+@keyframes order-row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes order-row-leave {
+  to {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+:host(.order-row-enter) {
+  animation: order-row-enter 0.18s ease-out;
+}
+
+:host(.order-row-leave) {
+  animation: order-row-leave 0.15s ease-in;
+}
+
 td {
   @include cell.base-cell;
 }

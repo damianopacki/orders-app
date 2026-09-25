@@ -34,7 +34,14 @@
       ></tr>
       @if (group.expanded) {
         @for (row of group.rows; track row.order.id; let isLast = $last) {
-          <tr appOrderRow [row]="row" [showDivider]="isLast" (closed)="closeOrder.emit(row.order.id)"></tr>
+          <tr
+            appOrderRow
+            [row]="row"
+            [showDivider]="isLast"
+            (closed)="closeOrder.emit(row.order.id)"
+            animate.enter="order-row-enter"
+            animate.leave="order-row-leave"
+          ></tr>
         }
       }
     </tbody>

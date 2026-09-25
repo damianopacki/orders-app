@@ -7,21 +7,20 @@ Aplikacja Angular wyświetlająca pogrupowaną tabelę zleceń z profitem liczon
 
 Projekt jest oceniany pod kątem modułowości, poprawnej pracy z Angularem i jakości TypeScriptu. Wygląd nie jest oceniany, ale paleta kolorów jest obowiązkowa.
 
+**Status:** Etapy 0–10 z `docs/PLAN.md` są ukończone i zacommitowane — checklista wymagań z `docs/TASK.md` jest w `README.md`. Zasady pracy poniżej obowiązują też przy dalszych zmianach na tym repo, tylko już bez podziału na z góry ustalone etapy.
+
 ---
 
 ## Zasady pracy (OBOWIĄZKOWE)
 
-1. **Jeden etap naraz.** Realizuj wyłącznie etap wskazany przeze mnie z `docs/PLAN.md`. Nie zaczynaj kolejnego etapu bez mojej wyraźnej zgody.
-2. **Najpierw plan.** Przed napisaniem kodu przedstaw plan etapu (pliki do utworzenia/zmiany, kluczowe decyzje) i poczekaj na akceptację.
+1. **Jedno zadanie naraz.** Realizuj wyłącznie to, o co poproszono w danej wiadomości (wcześniej: wyłącznie etap wskazany z `docs/PLAN.md`). Nie zaczynaj kolejnej, nieproszonej pracy bez wyraźnej zgody.
+2. **Najpierw plan.** Przed napisaniem kodu przedstaw plan (pliki do utworzenia/zmiany, kluczowe decyzje) i poczekaj na akceptację.
 3. **Nie commituj.** NIGDY nie wykonuj `git add`, `git commit`, `git push`, `git reset`, `git stash`, `git checkout` ani innych komend zmieniających stan repozytorium. Commity wykonuję sam. Dozwolone są tylko komendy odczytu: `git status`, `git diff`, `git log`.
 4. **Nie zgaduj.** Nie zakładaj struktury danych ani API bibliotek z pamięci:
    - struktury JSON sprawdzaj, pobierając dane z endpointów,
    - API bibliotek sprawdzaj w dokumentacji lub typach w `node_modules`.
      Jeśli wymaganie jest niejasne – zapytaj zamiast zakładać.
-5. **Zakończenie etapu.** Na końcu każdego etapu:
-   - uruchom `ng lint`, `ng build` i `ng test --watch=false`, napraw wszystkie błędy i ostrzeżenia,
-   - sprawdź „Kryteria ukończenia” etapu z `docs/PLAN.md`,
-   - wypisz podsumowanie DOKŁADNIE w tym formacie i zatrzymaj się:
+5. **Zakończenie pracy.** Zawsze uruchom `ng lint`, `ng build` i `ng test --watch=false` i napraw wszystkie błędy i ostrzeżenia. Przy kończeniu etapu z `docs/PLAN.md` (historycznie: Etapy 0–10) dodatkowo sprawdź jego „Kryteria ukończenia” i wypisz podsumowanie DOKŁADNIE w tym formacie:
 
 ```
 ✅ ETAP <N> GOTOWY DO ZACOMMITOWANIA
@@ -85,10 +84,11 @@ src/app/
 │       ├── orders-table/         # prezentacyjny
 │       │   ├── order-group-row/  # prezentacyjny
 │       │   └── order-row/        # prezentacyjny
-│       └── add-order-form/
+│       ├── add-order-dialog/     # natywny <dialog> jako modal
+│       └── add-order-form/       # prezentacyjny, Reactive Forms
 ├── shared/
 │   ├── state/            # współdzielone signalStoreFeature (np. call state)
-│   └── ui/               # np. theme-toggle
+│   └── ui/               # np. theme-toggle, trash-icon
 └── styles/               # (w src/) motywy, override'y bibliotek
 ```
 
@@ -96,7 +96,7 @@ src/app/
 
 - **SRP:** logika biznesowa (profit, grupowanie, uśrednianie, formatowanie komunikatów) żyje w czystych funkcjach w `utils/`. Store'y i komponenty tylko je wywołują.
 - **Brak redundancji w stanie:** wartości pochodne (profit, sumy grup) są zawsze wyliczane przez `computed`, nigdy przechowywane.
-- **DIP:** funkcjonalności zależą od abstrakcji (`Notifier`), nie od bibliotek (`ToastrService`).
+- **DIP:** funkcjonalności zależą od abstrakcji (`Notifier`), nie bezpośrednio od biblioteki powiadomień (`ngx-sonner`).
 - **DRY:** powtarzalna logika store'ów (np. status ładowania) trafia do `signalStoreFeature`.
 - **KISS:** bez funkcji ponad wymagania z `docs/TASK.md`. Jeśli coś dodajesz ponad zakres – zapytaj.
 

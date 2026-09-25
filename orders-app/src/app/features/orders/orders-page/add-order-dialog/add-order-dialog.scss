@@ -6,9 +6,43 @@
   border-radius: 0.5rem;
   background-color: var(--color-bg);
   color: var(--color-text);
+  opacity: 0;
+  transform: scale(0.95) translateY(-0.5rem);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    overlay 0.18s ease allow-discrete,
+    display 0.18s ease allow-discrete;
+
+  &[open] {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  @starting-style {
+    &[open] {
+      opacity: 0;
+      transform: scale(0.95) translateY(-0.5rem);
+    }
+  }
 
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition:
+      opacity 0.18s ease,
+      overlay 0.18s ease allow-discrete,
+      display 0.18s ease allow-discrete;
+  }
+
+  &[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    &[open]::backdrop {
+      opacity: 0;
+    }
   }
 
   &__panel {
