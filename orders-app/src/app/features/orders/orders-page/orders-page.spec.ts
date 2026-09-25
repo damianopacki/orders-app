@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
+import { Notifier } from '@core/notifications/notifier';
 import { QuotesSocket } from '@core/websocket/quotes-socket';
 
 import type { Order } from '../models/order';
@@ -19,13 +20,19 @@ describe('OrdersPage', () => {
   let ordersLoad: ReturnType<typeof vi.fn>;
   let referenceDataLoad: ReturnType<typeof vi.fn>;
   let toggleGroup: ReturnType<typeof vi.fn>;
+  let removeOrder: ReturnType<typeof vi.fn>;
+  let removeGroup: ReturnType<typeof vi.fn>;
+  let notifierShow: ReturnType<typeof vi.fn>;
   let ordersCallStatus: ReturnType<typeof signal<'idle' | 'loading' | 'loaded' | 'error'>>;
   let referenceDataCallStatus: ReturnType<typeof signal<'idle' | 'loading' | 'loaded' | 'error'>>;
 
-  function setup(initialOrders: Order[] = []): void {
+  function setup(initialOrders: Order[] = [], expandedSymbols: string[] = []): void {
     ordersLoad = vi.fn();
     referenceDataLoad = vi.fn();
     toggleGroup = vi.fn();
+    removeOrder = vi.fn();
+    removeGroup = vi.fn(() => [1, 2]);
+    notifierShow = vi.fn();
     ordersCallStatus = signal('loaded');
     referenceDataCallStatus = signal('loaded');
 
@@ -35,11 +42,13 @@ describe('OrdersPage', () => {
           provide: OrdersStore,
           useValue: {
             entities: signal(initialOrders),
-            expandedSymbols: signal<string[]>([]),
+            expandedSymbols: signal(expandedSymbols),
             activeSymbols: signal<string[]>([]),
             callStatus: ordersCallStatus,
             load: ordersLoad,
             toggleGroup,
+            removeOrder,
+            removeGroup,
           },
         },
         {
@@ -58,6 +67,7 @@ describe('OrdersPage', () => {
           provide: QuotesSocket,
           useValue: { quotes$: new Subject(), subscribeToSymbols: vi.fn(), unsubscribeFromSymbols: vi.fn() },
         },
+        { provide: Notifier, useValue: { show: notifierShow } },
       ],
     });
 
@@ -103,5 +113,29 @@ describe('OrdersPage', () => {
     groupRow.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(toggleGroup).toHaveBeenCalledWith('BTCUSD');
+  });
+
+  it('closes a single order and shows a success notification', () => {
+    setup([buildOrder({ id: 7 })], ['BTCUSD']);
+
+    const closeButton = fixture.nativeElement.querySelector('tr[appOrderRow] .order-row__close');
+    expect(closeButton).toBeTruthy();
+
+    closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(removeOrder).toHaveBeenCalledWith(7);
+    expect(notifierShow).toHaveBeenCalledWith('Zamknięto zlecenie nr 7', { type: 'success' });
+  });
+
+  it('closes a group and shows a success notification listing every removed id', () => {
+    setup([buildOrder({ id: 1 }), buildOrder({ id: 2 })]);
+
+    const closeButton = fixture.nativeElement.querySelector('tr[appOrderGroupRow] .order-group-row__close');
+    expect(closeButton).toBeTruthy();
+
+    closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(removeGroup).toHaveBeenCalledWith('BTCUSD');
+    expect(notifierShow).toHaveBeenCalledWith('Zamknięto zlecenie nr 1, 2', { type: 'success' });
   });
 });

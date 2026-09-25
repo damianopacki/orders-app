@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
+import { Notifier } from '@core/notifications/notifier';
+import { formatClosedOrdersMessage } from '@utils/format-closed-orders-message';
 import { selectOrderGroups } from '@utils/select-order-groups';
 
 import { OrdersStore } from '../state/orders-store';
@@ -21,6 +23,7 @@ export class OrdersPage {
   protected readonly ordersStore = inject(OrdersStore);
   protected readonly quotesStore = inject(QuotesStore);
   protected readonly referenceDataStore = inject(ReferenceDataStore);
+  private readonly notifier = inject(Notifier);
 
   protected readonly groups = computed(() =>
     selectOrderGroups(
@@ -48,5 +51,15 @@ export class OrdersPage {
     this.ordersStore.load();
     this.referenceDataStore.load();
     startQuotesSync();
+  }
+
+  protected closeOrder(id: number): void {
+    this.ordersStore.removeOrder(id);
+    this.notifier.show(formatClosedOrdersMessage([id]), { type: 'success' });
+  }
+
+  protected closeGroup(symbol: string): void {
+    const removedIds = this.ordersStore.removeGroup(symbol);
+    this.notifier.show(formatClosedOrdersMessage(removedIds), { type: 'success' });
   }
 }

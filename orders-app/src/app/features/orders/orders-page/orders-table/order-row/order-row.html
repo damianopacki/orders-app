@@ -17,8 +17,9 @@
     type="button"
     class="order-row__close"
     [attr.aria-label]="'Zamknij zlecenie nr ' + row().order.id"
+    title="Usuń"
     (click)="closed.emit()"
   >
-    &times;
+    <app-trash-icon />
   </button>
 </td>

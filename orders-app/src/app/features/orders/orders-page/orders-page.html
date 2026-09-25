@@ -9,6 +9,11 @@
     <p class="orders-page__status">Brak zleceń do wyświetlenia.</p>
   }
   @default {
-    <app-orders-table [groups]="groups()" (toggleGroup)="ordersStore.toggleGroup($event)" />
+    <app-orders-table
+      [groups]="groups()"
+      (toggleGroup)="ordersStore.toggleGroup($event)"
+      (closeOrder)="closeOrder($event)"
+      (closeGroup)="closeGroup($event)"
+    />
   }
 }

@@ -5,12 +5,14 @@ import { getProfitModifier } from '@utils/get-profit-modifier';
 import { CURRENCY_DECIMAL_FORMAT, QUANTITY_DECIMAL_FORMAT } from '@utils/number-format';
 import type { OrderGroupViewModel } from '@utils/select-order-groups';
 
+import { TrashIcon } from '@shared/ui/trash-icon/trash-icon';
+
 @Component({
   selector: 'tr[appOrderGroupRow]',
   templateUrl: './order-group-row.html',
   styleUrl: './order-group-row.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, TrashIcon],
   host: {
     class: 'order-group-row',
     tabindex: '0',

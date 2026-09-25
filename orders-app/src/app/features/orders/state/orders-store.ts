@@ -53,7 +53,7 @@ export const OrdersStore = signalStore(
     removeOrder(id: number): void {
       patchState(store, removeEntity(id));
     },
-    removeGroup(symbol: string): void {
+    removeGroup(symbol: string): number[] {
       const idsToRemove = store
         .entities()
         .filter((order) => order.symbol === symbol)
@@ -63,6 +63,8 @@ export const OrdersStore = signalStore(
       patchState(store, {
         expandedSymbols: store.expandedSymbols().filter((expanded) => expanded !== symbol),
       });
+
+      return idsToRemove;
     },
     toggleGroup(symbol: string): void {
       const expandedSymbols = store.expandedSymbols();

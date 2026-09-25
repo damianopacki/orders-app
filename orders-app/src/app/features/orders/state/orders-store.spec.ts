@@ -94,10 +94,11 @@ describe('OrdersStore', () => {
     store.load();
     store.toggleGroup('BTCUSD');
 
-    store.removeGroup('BTCUSD');
+    const removedIds = store.removeGroup('BTCUSD');
 
     expect(store.entities().map((order) => order.symbol)).toEqual(['ETHUSD']);
     expect(store.expandedSymbols()).toEqual([]);
+    expect(removedIds).toEqual([1, 2]);
   });
 
   it('removeGroup does not shrink availableSymbols', () => {
