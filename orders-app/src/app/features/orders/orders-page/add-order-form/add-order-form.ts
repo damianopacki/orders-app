@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -55,7 +63,10 @@ export class AddOrderForm {
   protected readonly form = this.formBuilder.group({
     symbol: this.formBuilder.control(this.initialValue.symbol, Validators.required),
     side: this.formBuilder.control<OrderSide>(this.initialValue.side, Validators.required),
-    size: this.formBuilder.control(this.initialValue.size, [Validators.required, positiveNumberValidator]),
+    size: this.formBuilder.control(this.initialValue.size, [
+      Validators.required,
+      positiveNumberValidator,
+    ]),
     openPrice: this.formBuilder.control(this.initialValue.openPrice, [
       Validators.required,
       positiveNumberValidator,

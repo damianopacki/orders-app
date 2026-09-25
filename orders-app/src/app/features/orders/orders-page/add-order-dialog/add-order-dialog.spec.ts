@@ -6,7 +6,10 @@ import { AddOrderDialog } from './add-order-dialog';
 describe('AddOrderDialog', () => {
   let fixture: ComponentFixture<AddOrderDialog>;
 
-  function setup(availableSymbols: string[] = ['BTCUSD'], quotesBySymbol: Record<string, Quote> = {}): void {
+  function setup(
+    availableSymbols: string[] = ['BTCUSD'],
+    quotesBySymbol: Record<string, Quote> = {},
+  ): void {
     fixture = TestBed.createComponent(AddOrderDialog);
     fixture.componentRef.setInput('availableSymbols', availableSymbols);
     fixture.componentRef.setInput('quotesBySymbol', quotesBySymbol);
@@ -34,7 +37,9 @@ describe('AddOrderDialog', () => {
     setup();
     const closeSpy = vi.spyOn(HTMLDialogElement.prototype, 'close');
 
-    fixture.nativeElement.querySelector('.add-order-dialog__close').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.nativeElement
+      .querySelector('.add-order-dialog__close')
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(closeSpy).toHaveBeenCalledTimes(1);
   });
@@ -52,7 +57,9 @@ describe('AddOrderDialog', () => {
     setup();
     const closeSpy = vi.spyOn(HTMLDialogElement.prototype, 'close');
 
-    fixture.nativeElement.querySelector('.add-order-dialog__panel').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.nativeElement
+      .querySelector('.add-order-dialog__panel')
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(closeSpy).not.toHaveBeenCalled();
   });
@@ -63,12 +70,16 @@ describe('AddOrderDialog', () => {
     const submittedSpy = vi.fn();
     fixture.componentInstance.submitted.subscribe(submittedSpy);
 
-    const select: HTMLSelectElement = fixture.nativeElement.querySelector('select[formControlName="symbol"]');
+    const select: HTMLSelectElement = fixture.nativeElement.querySelector(
+      'select[formControlName="symbol"]',
+    );
     select.value = 'BTCUSD';
     select.dispatchEvent(new Event('input'));
     select.dispatchEvent(new Event('change'));
 
-    const sizeInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="size"]');
+    const sizeInput: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input[formControlName="size"]',
+    );
     sizeInput.value = '1';
     sizeInput.dispatchEvent(new Event('input'));
     fixture.detectChanges();
@@ -76,7 +87,9 @@ describe('AddOrderDialog', () => {
     fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit'));
     fixture.detectChanges();
 
-    expect(submittedSpy).toHaveBeenCalledWith(expect.objectContaining({ symbol: 'BTCUSD', size: 1 }));
+    expect(submittedSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ symbol: 'BTCUSD', size: 1 }),
+    );
     expect(closeSpy).toHaveBeenCalledTimes(1);
   });
 });

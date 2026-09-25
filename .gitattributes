@@ -1,0 +1,3 @@
+# Keep LF in the working tree regardless of core.autocrlf — Prettier's format:check
+# expects LF and would otherwise fail on fresh Windows clones.
+* text=auto eol=lf

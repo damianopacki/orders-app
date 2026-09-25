@@ -15,19 +15,31 @@ describe('startQuotesSync', () => {
     const removeQuotes = vi.fn();
     const subscribeToSymbols = vi.fn();
     const unsubscribeFromSymbols = vi.fn();
-    const quotes$ = new Subject<{ symbol: string; bid: number; ask: number; timestamp: number }[]>();
+    const quotes$ = new Subject<
+      { symbol: string; bid: number; ask: number; timestamp: number }[]
+    >();
 
     TestBed.configureTestingModule({
       providers: [
         { provide: OrdersStore, useValue: { availableSymbols } },
         { provide: QuotesStore, useValue: { upsertQuotes, removeQuotes } },
-        { provide: QuotesSocket, useValue: { subscribeToSymbols, unsubscribeFromSymbols, quotes$ } },
+        {
+          provide: QuotesSocket,
+          useValue: { subscribeToSymbols, unsubscribeFromSymbols, quotes$ },
+        },
       ],
     });
 
     TestBed.runInInjectionContext(() => startQuotesSync());
 
-    return { availableSymbols, upsertQuotes, removeQuotes, subscribeToSymbols, unsubscribeFromSymbols, quotes$ };
+    return {
+      availableSymbols,
+      upsertQuotes,
+      removeQuotes,
+      subscribeToSymbols,
+      unsubscribeFromSymbols,
+      quotes$,
+    };
   }
 
   it('subscribes to symbols that become available', () => {

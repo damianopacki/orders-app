@@ -1,5 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { DestroyRef, Injectable, Signal, WritableSignal, effect, inject, signal } from '@angular/core';
+import {
+  DestroyRef,
+  Injectable,
+  Signal,
+  WritableSignal,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 
 export type Theme = 'light' | 'dark';
 
@@ -24,7 +32,9 @@ export class ThemeService {
   constructor() {
     const storedTheme = readStoredTheme();
     this.hasManualPreference = storedTheme !== null;
-    this.themeSignal = signal<Theme>(storedTheme ?? (this.darkSchemeQuery.matches ? 'dark' : 'light'));
+    this.themeSignal = signal<Theme>(
+      storedTheme ?? (this.darkSchemeQuery.matches ? 'dark' : 'light'),
+    );
     this.theme = this.themeSignal.asReadonly();
 
     effect(() => {
@@ -40,7 +50,9 @@ export class ThemeService {
     };
 
     this.darkSchemeQuery.addEventListener('change', handleSchemeChange);
-    inject(DestroyRef).onDestroy(() => this.darkSchemeQuery.removeEventListener('change', handleSchemeChange));
+    inject(DestroyRef).onDestroy(() =>
+      this.darkSchemeQuery.removeEventListener('change', handleSchemeChange),
+    );
   }
 
   setTheme(theme: Theme): void {

@@ -5,14 +5,29 @@ import type { OrderGroupViewModel } from '@utils/select-order-groups';
 import { OrdersTable } from './orders-table';
 
 function buildOrder(overrides: Partial<Order> = {}): Order {
-  return { id: 1, symbol: 'BTCUSD', side: 'BUY', size: 0.1, openPrice: 100, openTime: 0, swap: 0, ...overrides };
+  return {
+    id: 1,
+    symbol: 'BTCUSD',
+    side: 'BUY',
+    size: 0.1,
+    openPrice: 100,
+    openTime: 0,
+    swap: 0,
+    ...overrides,
+  };
 }
 
 function buildGroup(overrides: Partial<OrderGroupViewModel> = {}): OrderGroupViewModel {
   const order = buildOrder({ symbol: overrides.symbol ?? 'BTCUSD' });
   return {
     symbol: 'BTCUSD',
-    summary: { orderCount: 1, totalSize: 0.1, totalSwap: 0, averageOpenPrice: 100, totalProfit: 10 },
+    summary: {
+      orderCount: 1,
+      totalSize: 0.1,
+      totalSwap: 0,
+      averageOpenPrice: 100,
+      totalProfit: 10,
+    },
     expanded: false,
     rows: [{ order, profit: 10 }],
     ...overrides,
@@ -49,7 +64,9 @@ describe('OrdersTable', () => {
     const emitted: string[] = [];
     fixture.componentInstance.toggleGroup.subscribe((symbol) => emitted.push(symbol));
 
-    host.querySelector('tr[appOrderGroupRow]')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    host
+      .querySelector('tr[appOrderGroupRow]')!
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(emitted).toEqual(['BTCUSD']);
   });
@@ -59,7 +76,9 @@ describe('OrdersTable', () => {
     const emitted: string[] = [];
     fixture.componentInstance.closeGroup.subscribe((symbol) => emitted.push(symbol));
 
-    host.querySelector('tr[appOrderGroupRow] button')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    host
+      .querySelector('tr[appOrderGroupRow] button')!
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(emitted).toEqual(['BTCUSD']);
   });
@@ -69,7 +88,9 @@ describe('OrdersTable', () => {
     const emitted: number[] = [];
     fixture.componentInstance.closeOrder.subscribe((id) => emitted.push(id));
 
-    host.querySelector('tr[appOrderRow] button')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    host
+      .querySelector('tr[appOrderRow] button')!
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(emitted).toEqual([1]);
   });

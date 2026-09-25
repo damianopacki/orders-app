@@ -20,7 +20,7 @@ Projekt jest oceniany pod kątem modułowości, poprawnej pracy z Angularem i ja
    - struktury JSON sprawdzaj, pobierając dane z endpointów,
    - API bibliotek sprawdzaj w dokumentacji lub typach w `node_modules`.
      Jeśli wymaganie jest niejasne – zapytaj zamiast zakładać.
-5. **Zakończenie pracy.** Zawsze uruchom `ng lint`, `ng build` i `ng test --watch=false` i napraw wszystkie błędy i ostrzeżenia. Przy kończeniu etapu z `docs/PLAN.md` (historycznie: Etapy 0–10) dodatkowo sprawdź jego „Kryteria ukończenia” i wypisz podsumowanie DOKŁADNIE w tym formacie:
+5. **Zakończenie pracy.** Zawsze uruchom `npm run lint` (ESLint + `prettier --check`), `ng build` i `ng test --watch=false` i napraw wszystkie błędy i ostrzeżenia. Przy kończeniu etapu z `docs/PLAN.md` (historycznie: Etapy 0–10) dodatkowo sprawdź jego „Kryteria ukończenia” i wypisz podsumowanie DOKŁADNIE w tym formacie:
 
 ```
 ✅ ETAP <N> GOTOWY DO ZACOMMITOWANIA

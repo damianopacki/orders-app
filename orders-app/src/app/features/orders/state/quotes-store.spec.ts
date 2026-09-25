@@ -12,7 +12,10 @@ describe('QuotesStore', () => {
     const store = TestBed.inject(QuotesStore);
 
     store.upsertQuotes([buildQuote({ symbol: 'BTCUSD', bid: 100 })]);
-    store.upsertQuotes([buildQuote({ symbol: 'BTCUSD', bid: 110 }), buildQuote({ symbol: 'ETHUSD', bid: 5 })]);
+    store.upsertQuotes([
+      buildQuote({ symbol: 'BTCUSD', bid: 110 }),
+      buildQuote({ symbol: 'ETHUSD', bid: 5 }),
+    ]);
 
     expect(store.quotes()).toEqual({
       BTCUSD: buildQuote({ symbol: 'BTCUSD', bid: 110 }),

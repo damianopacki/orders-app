@@ -13,7 +13,16 @@ import { ReferenceDataStore } from '../state/reference-data-store';
 import { OrdersPage } from './orders-page';
 
 function buildOrder(overrides: Partial<Order> = {}): Order {
-  return { id: 1, symbol: 'BTCUSD', side: 'BUY', size: 0.1, openPrice: 100, openTime: 0, swap: 0, ...overrides };
+  return {
+    id: 1,
+    symbol: 'BTCUSD',
+    side: 'BUY',
+    size: 0.1,
+    openPrice: 100,
+    openTime: 0,
+    swap: 0,
+    ...overrides,
+  };
 }
 
 describe('OrdersPage', () => {
@@ -69,7 +78,11 @@ describe('OrdersPage', () => {
         },
         {
           provide: QuotesSocket,
-          useValue: { quotes$: new Subject(), subscribeToSymbols: vi.fn(), unsubscribeFromSymbols: vi.fn() },
+          useValue: {
+            quotes$: new Subject(),
+            subscribeToSymbols: vi.fn(),
+            unsubscribeFromSymbols: vi.fn(),
+          },
         },
         { provide: Notifier, useValue: { show: notifierShow } },
       ],
@@ -134,7 +147,9 @@ describe('OrdersPage', () => {
   it('closes a group and shows a success notification listing every removed id', () => {
     setup([buildOrder({ id: 1 }), buildOrder({ id: 2 })]);
 
-    const closeButton = fixture.nativeElement.querySelector('tr[appOrderGroupRow] .order-group-row__close');
+    const closeButton = fixture.nativeElement.querySelector(
+      'tr[appOrderGroupRow] .order-group-row__close',
+    );
     expect(closeButton).toBeTruthy();
 
     closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -152,16 +167,22 @@ describe('OrdersPage', () => {
   it('adds an order via the form and shows a success notification with the new id', () => {
     setup([]);
 
-    const symbolSelect: HTMLSelectElement = fixture.nativeElement.querySelector('select[formControlName="symbol"]');
+    const symbolSelect: HTMLSelectElement = fixture.nativeElement.querySelector(
+      'select[formControlName="symbol"]',
+    );
     symbolSelect.value = 'BTCUSD';
     symbolSelect.dispatchEvent(new Event('input'));
     symbolSelect.dispatchEvent(new Event('change'));
 
-    const sizeInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="size"]');
+    const sizeInput: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input[formControlName="size"]',
+    );
     sizeInput.value = '1';
     sizeInput.dispatchEvent(new Event('input'));
 
-    const priceInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="openPrice"]');
+    const priceInput: HTMLInputElement = fixture.nativeElement.querySelector(
+      'input[formControlName="openPrice"]',
+    );
     priceInput.value = '100';
     priceInput.dispatchEvent(new Event('input'));
 
@@ -169,7 +190,9 @@ describe('OrdersPage', () => {
     fixture.nativeElement.querySelector('form.add-order-form').dispatchEvent(new Event('submit'));
     fixture.detectChanges();
 
-    expect(addOrder).toHaveBeenCalledWith(expect.objectContaining({ symbol: 'BTCUSD', size: 1, openPrice: 100 }));
+    expect(addOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ symbol: 'BTCUSD', size: 1, openPrice: 100 }),
+    );
     expect(notifierShow).toHaveBeenCalledWith('Dodano zlecenie nr 42', { type: 'success' });
   });
 });

@@ -3,7 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import type { OrderRowViewModel } from '@utils/select-order-groups';
 import { OrderRow } from './order-row';
 
-function buildRow(orderOverrides: Partial<OrderRowViewModel['order']> = {}, profit: number | null = 10): OrderRowViewModel {
+function buildRow(
+  orderOverrides: Partial<OrderRowViewModel['order']> = {},
+  profit: number | null = 10,
+): OrderRowViewModel {
   return {
     order: {
       id: 1,
@@ -35,7 +38,9 @@ describe('OrderRow', () => {
   }
 
   it('renders order details in the expected columns', () => {
-    const cells = cellTexts(setup(buildRow({ id: 42, side: 'SELL', size: 0.25, openPrice: 123.456, swap: -0.5 })));
+    const cells = cellTexts(
+      setup(buildRow({ id: 42, side: 'SELL', size: 0.25, openPrice: 123.456, swap: -0.5 })),
+    );
 
     expect(cells[0]).toBe('');
     expect(cells[1]).toBe('42');

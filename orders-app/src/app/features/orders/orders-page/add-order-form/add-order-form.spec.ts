@@ -8,7 +8,10 @@ import { AddOrderForm } from './add-order-form';
 describe('AddOrderForm', () => {
   let fixture: ComponentFixture<AddOrderForm>;
 
-  function setup(availableSymbols: string[] = ['BTCUSD', 'ETHUSD'], quotesBySymbol: Record<string, Quote> = {}): void {
+  function setup(
+    availableSymbols: string[] = ['BTCUSD', 'ETHUSD'],
+    quotesBySymbol: Record<string, Quote> = {},
+  ): void {
     fixture = TestBed.createComponent(AddOrderForm);
     fixture.componentRef.setInput('availableSymbols', availableSymbols);
     fixture.componentRef.setInput('quotesBySymbol', quotesBySymbol);

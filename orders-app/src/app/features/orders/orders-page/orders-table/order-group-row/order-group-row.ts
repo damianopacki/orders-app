@@ -34,7 +34,9 @@ export class OrderGroupRow {
   readonly toggled = output<void>();
   readonly closed = output<void>();
 
-  protected readonly profitModifier = computed(() => getProfitModifier(this.group().summary.totalProfit));
+  protected readonly profitModifier = computed(() =>
+    getProfitModifier(this.group().summary.totalProfit),
+  );
 
   protected readonly quantityFormat = QUANTITY_DECIMAL_FORMAT;
   protected readonly currencyFormat = CURRENCY_DECIMAL_FORMAT;

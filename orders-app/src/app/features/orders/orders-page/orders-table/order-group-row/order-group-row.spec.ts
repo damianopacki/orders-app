@@ -6,7 +6,13 @@ import { OrderGroupRow } from './order-group-row';
 function buildGroup(overrides: Partial<OrderGroupViewModel> = {}): OrderGroupViewModel {
   return {
     symbol: 'BTCUSD',
-    summary: { orderCount: 3, totalSize: 0.3, totalSwap: -1.5, averageOpenPrice: 105.5, totalProfit: 20 },
+    summary: {
+      orderCount: 3,
+      totalSize: 0.3,
+      totalSwap: -1.5,
+      averageOpenPrice: 105.5,
+      totalProfit: 20,
+    },
     expanded: false,
     rows: [],
     ...overrides,
@@ -123,7 +129,9 @@ describe('OrderGroupRow', () => {
     fixture.componentInstance.toggled.subscribe(toggleSpy);
     fixture.componentInstance.closed.subscribe(closeSpy);
 
-    host.querySelector('.order-group-row__close')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    host
+      .querySelector('.order-group-row__close')!
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(closeSpy).toHaveBeenCalledTimes(1);
     expect(toggleSpy).not.toHaveBeenCalled();

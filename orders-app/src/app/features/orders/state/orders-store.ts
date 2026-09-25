@@ -1,6 +1,12 @@
 import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { addEntity, removeEntities, removeEntity, setAllEntities, withEntities } from '@ngrx/signals/entities';
+import {
+  addEntity,
+  removeEntities,
+  removeEntity,
+  setAllEntities,
+  withEntities,
+} from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 

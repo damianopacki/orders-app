@@ -17,7 +17,10 @@ describe('buildContractSizeMap', () => {
   });
 
   it('skips instruments referencing an unknown contract type', () => {
-    const map = buildContractSizeMap([{ symbol: 'BTCUSD', contractType: 99 }], [{ contractType: 0, contractSize: 1 }]);
+    const map = buildContractSizeMap(
+      [{ symbol: 'BTCUSD', contractType: 99 }],
+      [{ contractType: 0, contractSize: 1 }],
+    );
 
     expect(map).toEqual({});
   });

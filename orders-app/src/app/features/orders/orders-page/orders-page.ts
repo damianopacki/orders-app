@@ -38,10 +38,16 @@ export class OrdersPage {
   );
 
   protected readonly pageStatus = computed<PageStatus>(() => {
-    if (this.ordersStore.callStatus() === 'loading' || this.referenceDataStore.callStatus() === 'loading') {
+    if (
+      this.ordersStore.callStatus() === 'loading' ||
+      this.referenceDataStore.callStatus() === 'loading'
+    ) {
       return 'loading';
     }
-    if (this.ordersStore.callStatus() === 'error' || this.referenceDataStore.callStatus() === 'error') {
+    if (
+      this.ordersStore.callStatus() === 'error' ||
+      this.referenceDataStore.callStatus() === 'error'
+    ) {
       return 'error';
     }
     if (this.groups().length === 0) {

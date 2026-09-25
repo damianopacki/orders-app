@@ -27,7 +27,10 @@ describe('OrdersStore', () => {
   }
 
   it('loads orders and captures the initial available symbols', () => {
-    const orders = [buildOrder({ id: 1, symbol: 'BTCUSD' }), buildOrder({ id: 2, symbol: 'ETHUSD' })];
+    const orders = [
+      buildOrder({ id: 1, symbol: 'BTCUSD' }),
+      buildOrder({ id: 2, symbol: 'ETHUSD' }),
+    ];
     const store = setup({ getOrders: () => of(orders) });
 
     store.load();
@@ -63,7 +66,14 @@ describe('OrdersStore', () => {
     const store = setup({ getOrders: () => of([buildOrder({ id: 1 }), buildOrder({ id: 5 })]) });
     store.load();
 
-    const created = store.addOrder({ symbol: 'ETHUSD', side: 'SELL', size: 1, openPrice: 10, openTime: 0, swap: 0 });
+    const created = store.addOrder({
+      symbol: 'ETHUSD',
+      side: 'SELL',
+      size: 1,
+      openPrice: 10,
+      openTime: 0,
+      swap: 0,
+    });
 
     expect(created).toEqual({
       id: 6,
@@ -116,7 +126,8 @@ describe('OrdersStore', () => {
 
   it('removeGroup does not shrink availableSymbols', () => {
     const store = setup({
-      getOrders: () => of([buildOrder({ id: 1, symbol: 'BTCUSD' }), buildOrder({ id: 2, symbol: 'ETHUSD' })]),
+      getOrders: () =>
+        of([buildOrder({ id: 1, symbol: 'BTCUSD' }), buildOrder({ id: 2, symbol: 'ETHUSD' })]),
     });
     store.load();
 

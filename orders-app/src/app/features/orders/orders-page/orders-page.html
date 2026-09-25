@@ -1,5 +1,7 @@
 @if (pageStatus() !== 'loading' && pageStatus() !== 'error') {
-  <button type="button" class="orders-page__add-button" (click)="addOrderDialog.open()">Dodaj zlecenie</button>
+  <button type="button" class="orders-page__add-button" (click)="addOrderDialog.open()">
+    Dodaj zlecenie
+  </button>
   <app-add-order-dialog
     #addOrderDialog
     [availableSymbols]="ordersStore.availableSymbols()"
@@ -13,7 +15,9 @@
     <p class="orders-page__status">Ładowanie danych…</p>
   }
   @case ('error') {
-    <p class="orders-page__status" role="alert">Nie udało się załadować danych. Spróbuj odświeżyć stronę.</p>
+    <p class="orders-page__status" role="alert">
+      Nie udało się załadować danych. Spróbuj odświeżyć stronę.
+    </p>
   }
   @case ('empty') {
     <p class="orders-page__status">Brak zleceń do wyświetlenia.</p>
