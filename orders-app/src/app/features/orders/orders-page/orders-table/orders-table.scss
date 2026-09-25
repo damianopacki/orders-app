@@ -1,9 +1,13 @@
 :host {
   display: block;
+  overflow-x: auto;
 }
 
 .orders-table {
   width: 100%;
+  // Rounded threshold that keeps every column legible (the Open Time cell needs
+  // room for "dd.MM.yyyy HH:mm:ss"); not derived from an exact per-column sum.
+  min-width: 48rem;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;

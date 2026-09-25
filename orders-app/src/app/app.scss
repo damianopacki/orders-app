@@ -1,6 +1,12 @@
+@use 'styles/breakpoints' as bp;
+
 :host {
   display: block;
   padding: 1.5rem;
+
+  @include bp.mobile {
+    padding: 1rem;
+  }
 }
 
 .app__theme-bar {

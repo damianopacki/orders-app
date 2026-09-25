@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
 .add-order-dialog {
   width: 90vw;
   max-width: 32rem;
@@ -47,6 +49,10 @@
 
   &__panel {
     padding: 1.5rem;
+
+    @include bp.mobile {
+      padding: 1rem;
+    }
   }
 
   &__header {

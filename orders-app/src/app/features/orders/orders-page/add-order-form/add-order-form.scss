@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
 .add-order-form {
   display: flex;
   flex-wrap: wrap;
@@ -47,5 +49,15 @@
     border-radius: 0.25rem;
     background-color: var(--color-bg);
     color: var(--color-text);
+  }
+
+  @include bp.mobile {
+    &__field {
+      flex: 1 1 100%;
+    }
+
+    &__submit {
+      width: 100%;
+    }
   }
 }
