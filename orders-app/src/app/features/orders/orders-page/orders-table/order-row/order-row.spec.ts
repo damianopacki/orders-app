@@ -71,6 +71,20 @@ describe('OrderRow', () => {
     expect(profitCell.classList.contains('order-row__profit--negative')).toBe(false);
   });
 
+  it('shows a placeholder with an explanatory title when profit is unavailable', () => {
+    const profitCell = setup(buildRow({}, null)).querySelector('.order-row__profit')!;
+
+    expect(profitCell.textContent!.trim()).toBe('—');
+    expect(profitCell.getAttribute('title')).toBe('Brak aktualnych notowań');
+  });
+
+  it('shows zero profit as a number, without the placeholder title', () => {
+    const profitCell = setup(buildRow({}, 0)).querySelector('.order-row__profit')!;
+
+    expect(profitCell.textContent!.trim()).toBe('0.00');
+    expect(profitCell.hasAttribute('title')).toBe(false);
+  });
+
   it('shows the divider only when showDivider is true', () => {
     expect(setup(buildRow(), true).classList.contains('order-row--divider')).toBe(true);
     expect(setup(buildRow(), false).classList.contains('order-row--divider')).toBe(false);

@@ -5,6 +5,8 @@ import { getProfitModifier } from '@utils/get-profit-modifier';
 import {
   CURRENCY_DECIMAL_FORMAT,
   ORDER_TIME_FORMAT,
+  PROFIT_UNAVAILABLE_PLACEHOLDER,
+  PROFIT_UNAVAILABLE_TITLE,
   QUANTITY_DECIMAL_FORMAT,
 } from '@utils/display-formats';
 import type { OrderRowViewModel } from '@utils/select-order-groups';
@@ -32,4 +34,6 @@ export class OrderRow {
   protected readonly quantityFormat = QUANTITY_DECIMAL_FORMAT;
   protected readonly currencyFormat = CURRENCY_DECIMAL_FORMAT;
   protected readonly timeFormat = ORDER_TIME_FORMAT;
+  protected readonly profitPlaceholder = PROFIT_UNAVAILABLE_PLACEHOLDER;
+  protected readonly profitUnavailableTitle = PROFIT_UNAVAILABLE_TITLE;
 }

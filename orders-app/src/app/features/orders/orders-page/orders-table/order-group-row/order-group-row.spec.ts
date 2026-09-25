@@ -67,6 +67,22 @@ describe('OrderGroupRow', () => {
     expect(profitCell.classList.contains('order-group-row__profit--negative')).toBe(false);
   });
 
+  it('shows a placeholder with an explanatory title when total profit is unavailable', () => {
+    const host = setup(buildGroup({ summary: { ...buildGroup().summary, totalProfit: null } }));
+    const profitCell = host.querySelector('.order-group-row__profit')!;
+
+    expect(profitCell.textContent!.trim()).toBe('—');
+    expect(profitCell.getAttribute('title')).toBe('Brak aktualnych notowań');
+  });
+
+  it('shows zero total profit as a number, without the placeholder title', () => {
+    const host = setup(buildGroup({ summary: { ...buildGroup().summary, totalProfit: 0 } }));
+    const profitCell = host.querySelector('.order-group-row__profit')!;
+
+    expect(profitCell.textContent!.trim()).toBe('0.00');
+    expect(profitCell.hasAttribute('title')).toBe(false);
+  });
+
   it('emits toggle on click, Enter and Space', () => {
     const host = setup(buildGroup());
     const toggleSpy = vi.fn();

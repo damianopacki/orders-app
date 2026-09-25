@@ -9,8 +9,9 @@
   class="order-row__profit"
   [class.order-row__profit--positive]="profitModifier() === 'positive'"
   [class.order-row__profit--negative]="profitModifier() === 'negative'"
+  [attr.title]="row().profit === null ? profitUnavailableTitle : null"
 >
-  {{ row().profit | number: currencyFormat }}
+  {{ (row().profit | number: currencyFormat) ?? profitPlaceholder }}
 </td>
 <td>
   <button
