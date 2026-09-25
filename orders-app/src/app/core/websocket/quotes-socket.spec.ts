@@ -34,7 +34,11 @@ class FakeWebSocket {
   }
 
   simulateMessage(payload: unknown): void {
-    this.onmessage?.({ data: JSON.stringify(payload) } as MessageEvent);
+    this.simulateRawMessage(JSON.stringify(payload));
+  }
+
+  simulateRawMessage(data: string): void {
+    this.onmessage?.({ data } as MessageEvent);
   }
 }
 
@@ -103,6 +107,43 @@ describe('QuotesSocket', () => {
     });
 
     expect(received).toEqual([[{ symbol: 'BTCUSD', bid: 100, ask: 101, timestamp: 123 }]]);
+  });
+
+  it('survives a malformed JSON frame without reconnecting', () => {
+    const quotesSocket = new QuotesSocket();
+    const received: Quote[][] = [];
+    quotesSocket.quotes$.subscribe((quotes) => received.push(quotes));
+    currentSocket().simulateOpen();
+
+    currentSocket().simulateRawMessage('{not json');
+    vi.advanceTimersByTime(1000);
+    currentSocket().simulateMessage({
+      p: '/quotes/subscribed',
+      d: [{ s: 'BTCUSD', b: 100, a: 101, t: 123 }],
+    });
+
+    expect(FakeWebSocket.instances.length).toBe(1);
+    expect(received).toEqual([[{ symbol: 'BTCUSD', bid: 100, ask: 101, timestamp: 123 }]]);
+  });
+
+  it('skips malformed quote entries and emits nothing when none are valid', () => {
+    const quotesSocket = new QuotesSocket();
+    const received: Quote[][] = [];
+    quotesSocket.quotes$.subscribe((quotes) => received.push(quotes));
+    currentSocket().simulateOpen();
+
+    currentSocket().simulateMessage({ p: '/quotes/subscribed', d: [{ s: 'BTCUSD', b: 'oops' }] });
+    currentSocket().simulateMessage({ p: '/quotes/subscribed', d: 'oops' });
+    currentSocket().simulateMessage({
+      p: '/quotes/subscribed',
+      d: [
+        { s: 'BTCUSD', b: null, a: 101, t: 123 },
+        { s: 'ETHUSD', b: 2000, a: 2001, t: 124 },
+      ],
+    });
+
+    expect(FakeWebSocket.instances.length).toBe(1);
+    expect(received).toEqual([[{ symbol: 'ETHUSD', bid: 2000, ask: 2001, timestamp: 124 }]]);
   });
 
   it('reconnects with a growing delay after an unclean close and resubscribes tracked symbols', () => {

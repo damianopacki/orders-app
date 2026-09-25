@@ -3,6 +3,7 @@ import { Observable, filter, map, repeat, retry, timer } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import type { Quote } from '../../features/orders/models/quote';
+import { deserializeMessage, parseQuotesMessage } from './parse-quotes-message';
 
 const QUOTES_WEBSOCKET_URL = 'wss://webquotes.geeksoft.pl/websocket/quotes';
 const MIN_RECONNECT_DELAY_MS = 1000;
@@ -10,7 +11,6 @@ const MAX_RECONNECT_DELAY_MS = 30000;
 
 const SUBSCRIBE_ADD_LIST_PATH = '/subscribe/addlist';
 const SUBSCRIBE_REMOVE_LIST_PATH = '/subscribe/removelist';
-const QUOTES_SUBSCRIBED_PATH = '/quotes/subscribed';
 
 interface SubscribeAddListMessage {
   readonly p: typeof SUBSCRIBE_ADD_LIST_PATH;
@@ -24,28 +24,6 @@ interface SubscribeRemoveListMessage {
 
 type OutgoingQuotesMessage = SubscribeAddListMessage | SubscribeRemoveListMessage;
 
-interface QuoteDto {
-  readonly s: string;
-  readonly b: number;
-  readonly a: number;
-  readonly t: number;
-}
-
-interface QuotesSubscribedMessage {
-  readonly p: typeof QUOTES_SUBSCRIBED_PATH;
-  readonly d: readonly QuoteDto[];
-}
-
-type IncomingQuotesMessage = QuotesSubscribedMessage | { readonly p: string };
-
-function isQuotesSubscribedMessage(message: IncomingQuotesMessage): message is QuotesSubscribedMessage {
-  return message.p === QUOTES_SUBSCRIBED_PATH;
-}
-
-function mapQuoteDto(dto: QuoteDto): Quote {
-  return { symbol: dto.s, bid: dto.b, ask: dto.a, timestamp: dto.t };
-}
-
 function reconnectDelay(retryCount: number): Observable<number> {
   return timer(Math.min(MIN_RECONNECT_DELAY_MS * 2 ** (retryCount - 1), MAX_RECONNECT_DELAY_MS));
 }
@@ -55,8 +33,10 @@ export class QuotesSocket {
   private readonly subscribedSymbols = new Set<string>();
   private hasConnectedOnce = false;
 
-  private readonly socket$: WebSocketSubject<OutgoingQuotesMessage | IncomingQuotesMessage> = webSocket({
+  // Incoming frames are untrusted, hence `unknown`; outgoing ones stay typed via send().
+  private readonly socket$: WebSocketSubject<unknown> = webSocket<unknown>({
     url: QUOTES_WEBSOCKET_URL,
+    deserializer: deserializeMessage,
     openObserver: {
       next: () => {
         if (this.hasConnectedOnce) {
@@ -72,8 +52,8 @@ export class QuotesSocket {
   readonly quotes$: Observable<Quote[]> = this.socket$.pipe(
     retry({ delay: (_error, retryCount) => reconnectDelay(retryCount) }),
     repeat({ delay: (count) => reconnectDelay(count) }),
-    filter(isQuotesSubscribedMessage),
-    map((message) => message.d.map(mapQuoteDto)),
+    map(parseQuotesMessage),
+    filter((quotes) => quotes.length > 0),
   );
 
   subscribeToSymbols(symbols: readonly string[]): void {
@@ -83,7 +63,7 @@ export class QuotesSocket {
     }
 
     newSymbols.forEach((symbol) => this.subscribedSymbols.add(symbol));
-    this.socket$.next({ p: SUBSCRIBE_ADD_LIST_PATH, d: newSymbols });
+    this.send({ p: SUBSCRIBE_ADD_LIST_PATH, d: newSymbols });
   }
 
   unsubscribeFromSymbols(symbols: readonly string[]): void {
@@ -93,12 +73,16 @@ export class QuotesSocket {
     }
 
     existingSymbols.forEach((symbol) => this.subscribedSymbols.delete(symbol));
-    this.socket$.next({ p: SUBSCRIBE_REMOVE_LIST_PATH, d: existingSymbols });
+    this.send({ p: SUBSCRIBE_REMOVE_LIST_PATH, d: existingSymbols });
   }
 
   private resendSubscriptions(): void {
     if (this.subscribedSymbols.size > 0) {
-      this.socket$.next({ p: SUBSCRIBE_ADD_LIST_PATH, d: Array.from(this.subscribedSymbols) });
+      this.send({ p: SUBSCRIBE_ADD_LIST_PATH, d: Array.from(this.subscribedSymbols) });
     }
+  }
+
+  private send(message: OutgoingQuotesMessage): void {
+    this.socket$.next(message);
   }
 }

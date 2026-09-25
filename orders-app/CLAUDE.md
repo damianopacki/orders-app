@@ -117,7 +117,9 @@ src/app/
 ## Bezpieczeństwo
 
 - Żadnych sekretów w kodzie.
-- Dane z sieci (HTTP, WebSocket) traktuj jako niezaufane: typuj je i obsługuj brakujące lub niepoprawne pola.
+- Dane z sieci traktuj jako niezaufane.
+  - WebSocket: każda wiadomość jest walidowana w runtime (`core/websocket/parse-quotes-message.ts`). Niepoprawny JSON, nieznane wiadomości i błędne wpisy są pomijane i nie zrywają połączenia.
+  - HTTP: odpowiedzi to statyczne pliki o stałym kontrakcie — typowane na granicy `MarketDataApi` bez pełnej walidacji runtime (świadoma decyzja, patrz `NOTES.md`).
 
 ## Kompatybilność
 
