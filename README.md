@@ -31,11 +31,11 @@ npm run format             # formatowanie src/ Prettierem
 ```
 src/app/
 ├── core/                 # singletony niezależne od domeny
-│   ├── api/              # HTTP (MarketDataApi, stałe endpointów)
-│   ├── websocket/        # QuotesSocket (kwotowania, auto-reconnect, walidacja wiadomości)
 │   ├── notifications/    # Notifier (abstrakcja) + SonnerNotifier (adapter)
 │   └── theme/            # ThemeService (jasny/ciemny, zapamiętywanie wyboru)
-├── features/orders/
+├── features/orders/      # alias `@orders/*`
+│   ├── data/             # MarketDataApi (HTTP, stałe endpointów) + QuotesSocket
+│   │                     # (kwotowania, auto-reconnect, walidacja wiadomości)
 │   ├── models/           # interfejsy i typy domenowe
 │   ├── utils/             # czyste funkcje (profit, grupowanie, formatowanie, daty) + testy
 │   ├── state/             # Signal Store'y (OrdersStore, QuotesStore, ReferenceDataStore)
@@ -105,7 +105,7 @@ strukturę HTML tabeli wrapperem.
   `/subscribe/removelist` jest w praktyce nieużywany — mechanizm diffu symboli zostaje, ale
   realnie działa tylko przy ponownym załadowaniu danych.
 - **Walidacja danych z sieci: WebSocket tak, HTTP tylko typowanie.** Każda wiadomość WS
-  przechodzi przez `core/websocket/parse-quotes-message.ts`: niepoprawny JSON, nieznane
+  przechodzi przez `features/orders/data/parse-quotes-message.ts`: niepoprawny JSON, nieznane
   wiadomości i wpisy z brakującymi/niepoprawnymi polami są pomijane, zamiast zrywać strumień
   (i wymuszać reconnect) albo wprowadzać `NaN` do profitu. Odpowiedzi HTTP to statyczne pliki
   o stałym kontrakcie — są typowane na granicy `MarketDataApi` bez pełnej walidacji runtime

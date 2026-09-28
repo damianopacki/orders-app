@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { Notifier } from '@core/notifications/notifier';
-import { formatAddedOrderMessage } from '@utils/format-added-order-message';
-import { formatClosedOrdersMessage } from '@utils/format-closed-orders-message';
-import { selectOrderGroups } from '@utils/select-order-groups';
+import { formatAddedOrderMessage } from '@orders/utils/format-added-order-message';
+import { formatClosedOrdersMessage } from '@orders/utils/format-closed-orders-message';
+import { selectOrderGroups } from '@orders/utils/select-order-groups';
 
 import type { NewOrder } from '../models/order';
 import { OrdersStore } from '../state/orders-store';

@@ -3,7 +3,7 @@ import { signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Notifier } from '@core/notifications/notifier';
-import { QuotesSocket } from '@core/websocket/quotes-socket';
+import { QuotesSocket } from '@orders/data/quotes-socket';
 import type { CallStatus } from '@shared/state/with-call-state';
 
 import type { Order } from '../models/order';

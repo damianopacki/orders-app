@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import type { OrderGroupViewModel } from '@utils/select-order-groups';
+import type { OrderGroupViewModel } from '@orders/utils/select-order-groups';
 import { OrderGroupRow } from './order-group-row';
 
 function buildGroup(overrides: Partial<OrderGroupViewModel> = {}): OrderGroupViewModel {

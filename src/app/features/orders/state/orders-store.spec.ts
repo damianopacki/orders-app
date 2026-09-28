@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
-import { MarketDataApi } from '@core/api/market-data-api';
+import { MarketDataApi } from '@orders/data/market-data-api';
 import type { Order } from '../models/order';
 import { OrdersStore } from './orders-store';
 

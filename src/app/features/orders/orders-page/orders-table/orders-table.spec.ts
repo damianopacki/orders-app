@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import type { Order } from '../../models/order';
-import type { OrderGroupViewModel } from '@utils/select-order-groups';
+import type { OrderGroupViewModel } from '@orders/utils/select-order-groups';
 import { OrdersTable } from './orders-table';
 
 function buildOrder(overrides: Partial<Order> = {}): Order {

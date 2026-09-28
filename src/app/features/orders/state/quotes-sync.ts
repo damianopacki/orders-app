@@ -1,8 +1,8 @@
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
-import { QuotesSocket } from '@core/websocket/quotes-socket';
-import { diffSymbols } from '@utils/diff-symbols';
+import { QuotesSocket } from '@orders/data/quotes-socket';
+import { diffSymbols } from '@orders/utils/diff-symbols';
 
 import { OrdersStore } from './orders-store';
 import { QuotesStore } from './quotes-store';

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import type { OrderRowViewModel } from '@utils/select-order-groups';
+import type { OrderRowViewModel } from '@orders/utils/select-order-groups';
 import { OrderRow } from './order-row';
 
 function buildRow(

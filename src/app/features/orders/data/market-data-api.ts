@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import type { ContractType } from '../../features/orders/models/contract-type';
-import type { Instrument } from '../../features/orders/models/instrument';
-import type { Order, OrdersResponseDto } from '../../features/orders/models/order';
+import type { ContractType } from '../models/contract-type';
+import type { Instrument } from '../models/instrument';
+import type { Order, OrdersResponseDto } from '../models/order';
 import { API_ENDPOINTS } from './api-endpoints';
 
 @Injectable({ providedIn: 'root' })

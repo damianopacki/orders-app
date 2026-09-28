@@ -6,7 +6,7 @@
     "paths": {
       "@core/*": ["./src/app/core/*"],
       "@shared/*": ["./src/app/shared/*"],
-      "@utils/*": ["./src/app/features/orders/utils/*"]
+      "@orders/*": ["./src/app/features/orders/*"]
     },
     "strict": true,
     "noImplicitOverride": true,

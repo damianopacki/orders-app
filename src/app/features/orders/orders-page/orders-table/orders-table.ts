@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import type { OrderGroupViewModel } from '@utils/select-order-groups';
+import type { OrderGroupViewModel } from '@orders/utils/select-order-groups';
 
 import { OrderGroupRow } from './order-group-row/order-group-row';
 import { OrderRow } from './order-row/order-row';

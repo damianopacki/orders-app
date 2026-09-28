@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 
-import { QuotesSocket } from '@core/websocket/quotes-socket';
+import { QuotesSocket } from '@orders/data/quotes-socket';
 
 import { OrdersStore } from './orders-store';
 import { QuotesStore } from './quotes-store';

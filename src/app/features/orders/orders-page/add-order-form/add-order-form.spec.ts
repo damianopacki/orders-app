@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { parseDateTimeLocal } from '@utils/date-time-local';
+import { parseDateTimeLocal } from '@orders/utils/date-time-local';
 
 import type { Quote } from '../../models/quote';
 import { AddOrderForm } from './add-order-form';

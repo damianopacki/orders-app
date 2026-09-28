@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, filter, map, repeat, retry, timer } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
-import type { Quote } from '../../features/orders/models/quote';
+import type { Quote } from '../models/quote';
 import { deserializeMessage, parseQuotesMessage } from './parse-quotes-message';
 
 const QUOTES_WEBSOCKET_URL = 'wss://webquotes.geeksoft.pl/websocket/quotes';

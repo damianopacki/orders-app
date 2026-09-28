@@ -1,4 +1,4 @@
-import type { Quote } from '../../features/orders/models/quote';
+import type { Quote } from '../models/quote';
 import { QuotesSocket } from './quotes-socket';
 
 class FakeWebSocket {

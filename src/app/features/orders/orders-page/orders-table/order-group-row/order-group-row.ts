@@ -1,14 +1,14 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
-import { getProfitModifier } from '@utils/get-profit-modifier';
+import { getProfitModifier } from '@orders/utils/get-profit-modifier';
 import {
   CURRENCY_DECIMAL_FORMAT,
   PROFIT_UNAVAILABLE_PLACEHOLDER,
   PROFIT_UNAVAILABLE_TITLE,
   QUANTITY_DECIMAL_FORMAT,
-} from '@utils/display-formats';
-import type { OrderGroupViewModel } from '@utils/select-order-groups';
+} from '@orders/utils/display-formats';
+import type { OrderGroupViewModel } from '@orders/utils/select-order-groups';
 
 import { TrashIcon } from '@shared/ui/trash-icon/trash-icon';
 

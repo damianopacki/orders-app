@@ -3,9 +3,9 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, pipe, switchMap, tap } from 'rxjs';
 
-import { MarketDataApi } from '@core/api/market-data-api';
+import { MarketDataApi } from '@orders/data/market-data-api';
+import { buildContractSizeMap } from '@orders/utils/build-contract-size-map';
 import { trackCallState, withCallState } from '@shared/state/with-call-state';
-import { buildContractSizeMap } from '@utils/build-contract-size-map';
 
 import type { ContractType } from '../models/contract-type';
 import type { Instrument } from '../models/instrument';

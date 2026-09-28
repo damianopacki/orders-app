@@ -1,4 +1,4 @@
-import type { Quote } from '../../features/orders/models/quote';
+import type { Quote } from '../models/quote';
 
 const QUOTES_SUBSCRIBED_PATH = '/quotes/subscribed';
 

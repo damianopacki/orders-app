@@ -72,11 +72,10 @@ Proponowany commit message:
 ```
 src/app/
 ├── core/                 # singletony niezależne od domeny
-│   ├── api/              # HTTP (MarketDataApi, stałe endpointów)
-│   ├── websocket/        # QuotesSocket
 │   ├── notifications/    # Notifier (abstrakcja) + SonnerNotifier (adapter)
 │   └── theme/            # ThemeService
-├── features/orders/
+├── features/orders/      # alias `@orders/*`
+│   ├── data/             # dostęp do danych: MarketDataApi (HTTP), QuotesSocket (WebSocket)
 │   ├── models/           # interfejsy i typy domenowe
 │   ├── utils/            # czyste funkcje (profit, grupowanie, formatowanie) + testy
 │   ├── state/            # Signal Store'y + synchronizacja kwotowań
@@ -118,7 +117,7 @@ src/app/
 
 - Żadnych sekretów w kodzie.
 - Dane z sieci traktuj jako niezaufane.
-  - WebSocket: każda wiadomość jest walidowana w runtime (`core/websocket/parse-quotes-message.ts`). Niepoprawny JSON, nieznane wiadomości i błędne wpisy są pomijane i nie zrywają połączenia.
+  - WebSocket: każda wiadomość jest walidowana w runtime (`features/orders/data/parse-quotes-message.ts`). Niepoprawny JSON, nieznane wiadomości i błędne wpisy są pomijane i nie zrywają połączenia.
   - HTTP: odpowiedzi to statyczne pliki o stałym kontrakcie — typowane na granicy `MarketDataApi` bez pełnej walidacji runtime (świadoma decyzja, patrz `NOTES.md`).
 
 ## Kompatybilność

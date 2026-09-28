@@ -10,10 +10,10 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 
-import { MarketDataApi } from '@core/api/market-data-api';
+import { MarketDataApi } from '@orders/data/market-data-api';
+import { getNextOrderId } from '@orders/utils/get-next-order-id';
+import { compareSymbols, getUniqueSymbols } from '@orders/utils/get-unique-symbols';
 import { trackCallState, withCallState } from '@shared/state/with-call-state';
-import { getNextOrderId } from '@utils/get-next-order-id';
-import { compareSymbols, getUniqueSymbols } from '@utils/get-unique-symbols';
 
 import type { NewOrder, Order } from '../models/order';
 
