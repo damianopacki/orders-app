@@ -10,15 +10,15 @@
 <td></td>
 <td>{{ group().summary.totalSize | number: quantityFormat }}</td>
 <td></td>
-<td>{{ group().summary.averageOpenPrice | number: currencyFormat }}</td>
-<td>{{ group().summary.totalSwap | number: currencyFormat }}</td>
+<td>{{ group().summary.averageOpenPrice | number: priceFormat }}</td>
+<td>{{ group().summary.totalSwap | number: amountFormat }}</td>
 <td
   class="order-group-row__profit"
   [class.order-group-row__profit--positive]="profitModifier() === 'positive'"
   [class.order-group-row__profit--negative]="profitModifier() === 'negative'"
   [attr.title]="group().summary.totalProfit === null ? profitUnavailableTitle : null"
 >
-  {{ (group().summary.totalProfit | number: currencyFormat) ?? profitPlaceholder }}
+  {{ (group().summary.totalProfit | number: amountFormat) ?? profitPlaceholder }}
 </td>
 <td>
   <button

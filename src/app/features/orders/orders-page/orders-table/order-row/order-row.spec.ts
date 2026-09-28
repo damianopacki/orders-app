@@ -1,7 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { provideAppLocale } from '@core/locale/provide-app-locale';
 import type { OrderRowViewModel } from '@orders/utils/select-order-groups';
 import { OrderRow } from './order-row';
+
+// pl uses a non-breaking space (U+00A0) as the thousands separator.
+const NBSP = String.fromCharCode(0xa0);
 
 function buildRow(
   orderOverrides: Partial<OrderRowViewModel['order']> = {},
@@ -25,6 +29,10 @@ function buildRow(
 describe('OrderRow', () => {
   let fixture: ComponentFixture<OrderRow>;
 
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [provideAppLocale()] });
+  });
+
   function setup(row: OrderRowViewModel, showDivider = true): HTMLElement {
     fixture = TestBed.createComponent(OrderRow);
     fixture.componentRef.setInput('row', row);
@@ -45,9 +53,21 @@ describe('OrderRow', () => {
     expect(cells[0]).toBe('');
     expect(cells[1]).toBe('42');
     expect(cells[2]).toBe('SELL');
-    expect(cells[3]).toBe('0.25');
-    expect(cells[5]).toBe('123.46');
-    expect(cells[6]).toBe('-0.50');
+    expect(cells[3]).toBe('0,25');
+    expect(cells[5]).toBe('123,456');
+    expect(cells[6]).toBe('-0,50');
+  });
+
+  it('keeps up to 5 decimals so forex prices and small swaps/profits stay visible', () => {
+    const cells = cellTexts(setup(buildRow({ openPrice: 0.51786, swap: -0.00147939 }, 0.0000412)));
+
+    expect(cells[5]).toBe('0,51786');
+    expect(cells[6]).toBe('-0,00148');
+    expect(cells[7]).toBe('0,00004');
+  });
+
+  it('formats numbers with the Polish locale (non-breaking space as the group separator)', () => {
+    expect(cellTexts(setup(buildRow({ openPrice: 104837.47 })))[5]).toBe(`104${NBSP}837,47`);
   });
 
   it('formats openTime as dd.MM.yyyy HH:mm:ss', () => {
@@ -86,7 +106,7 @@ describe('OrderRow', () => {
   it('shows zero profit as a number, without the placeholder title', () => {
     const profitCell = setup(buildRow({}, 0)).querySelector('.order-row__profit')!;
 
-    expect(profitCell.textContent!.trim()).toBe('0.00');
+    expect(profitCell.textContent!.trim()).toBe('0,00');
     expect(profitCell.hasAttribute('title')).toBe(false);
   });
 

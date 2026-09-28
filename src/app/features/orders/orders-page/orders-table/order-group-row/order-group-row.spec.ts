@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { provideAppLocale } from '@core/locale/provide-app-locale';
 import type { OrderGroupViewModel } from '@orders/utils/select-order-groups';
 import { OrderGroupRow } from './order-group-row';
 
@@ -22,6 +23,10 @@ function buildGroup(overrides: Partial<OrderGroupViewModel> = {}): OrderGroupVie
 describe('OrderGroupRow', () => {
   let fixture: ComponentFixture<OrderGroupRow>;
 
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [provideAppLocale()] });
+  });
+
   function setup(group: OrderGroupViewModel, showDivider = true): HTMLElement {
     fixture = TestBed.createComponent(OrderGroupRow);
     fixture.componentRef.setInput('group', group);
@@ -40,9 +45,9 @@ describe('OrderGroupRow', () => {
     expect(host.textContent).toContain('BTCUSD');
     const cells = cellTexts(host);
     expect(cells[0]).toContain('3');
-    expect(cells[3]).toBe('0.3');
-    expect(cells[5]).toBe('105.50');
-    expect(cells[6]).toBe('-1.50');
+    expect(cells[3]).toBe('0,3');
+    expect(cells[5]).toBe('105,50');
+    expect(cells[6]).toBe('-1,50');
   });
 
   it('leaves Order ID, Side and Open Time columns empty', () => {
@@ -85,7 +90,7 @@ describe('OrderGroupRow', () => {
     const host = setup(buildGroup({ summary: { ...buildGroup().summary, totalProfit: 0 } }));
     const profitCell = host.querySelector('.order-group-row__profit')!;
 
-    expect(profitCell.textContent!.trim()).toBe('0.00');
+    expect(profitCell.textContent!.trim()).toBe('0,00');
     expect(profitCell.hasAttribute('title')).toBe(false);
   });
 

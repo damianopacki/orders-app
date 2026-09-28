@@ -6,6 +6,7 @@ import {
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
+import { provideAppLocale } from '@core/locale/provide-app-locale';
 import { Notifier } from '@core/notifications/notifier';
 import { SonnerNotifier } from '@core/notifications/sonner-notifier';
 
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideHttpClient(withFetch()),
     provideRouter(routes),
+    provideAppLocale(),
     { provide: Notifier, useClass: SonnerNotifier },
   ],
 };

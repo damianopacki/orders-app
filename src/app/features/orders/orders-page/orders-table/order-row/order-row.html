@@ -3,15 +3,15 @@
 <td>{{ row().order.side }}</td>
 <td>{{ row().order.size | number: quantityFormat }}</td>
 <td>{{ row().order.openTime | date: timeFormat }}</td>
-<td>{{ row().order.openPrice | number: currencyFormat }}</td>
-<td>{{ row().order.swap | number: currencyFormat }}</td>
+<td>{{ row().order.openPrice | number: priceFormat }}</td>
+<td>{{ row().order.swap | number: amountFormat }}</td>
 <td
   class="order-row__profit"
   [class.order-row__profit--positive]="profitModifier() === 'positive'"
   [class.order-row__profit--negative]="profitModifier() === 'negative'"
   [attr.title]="row().profit === null ? profitUnavailableTitle : null"
 >
-  {{ (row().profit | number: currencyFormat) ?? profitPlaceholder }}
+  {{ (row().profit | number: amountFormat) ?? profitPlaceholder }}
 </td>
 <td>
   <button

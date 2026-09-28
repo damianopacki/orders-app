@@ -3,9 +3,10 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 
 import { getProfitModifier } from '@orders/utils/get-profit-modifier';
 import {
-  CURRENCY_DECIMAL_FORMAT,
+  AMOUNT_DECIMAL_FORMAT,
   PROFIT_UNAVAILABLE_PLACEHOLDER,
   PROFIT_UNAVAILABLE_TITLE,
+  PRICE_DECIMAL_FORMAT,
   QUANTITY_DECIMAL_FORMAT,
 } from '@orders/utils/display-formats';
 import type { OrderGroupViewModel } from '@orders/utils/select-order-groups';
@@ -39,7 +40,8 @@ export class OrderGroupRow {
   );
 
   protected readonly quantityFormat = QUANTITY_DECIMAL_FORMAT;
-  protected readonly currencyFormat = CURRENCY_DECIMAL_FORMAT;
+  protected readonly priceFormat = PRICE_DECIMAL_FORMAT;
+  protected readonly amountFormat = AMOUNT_DECIMAL_FORMAT;
   protected readonly profitPlaceholder = PROFIT_UNAVAILABLE_PLACEHOLDER;
   protected readonly profitUnavailableTitle = PROFIT_UNAVAILABLE_TITLE;
 
