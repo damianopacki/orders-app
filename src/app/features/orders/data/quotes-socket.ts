@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, filter, map, repeat, retry, timer } from 'rxjs';
+import { Observable, concatWith, filter, map, retry, throwError, timer } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import type { Quote } from '../models/quote';
@@ -8,6 +8,7 @@ import { deserializeMessage, parseQuotesMessage } from './parse-quotes-message';
 const QUOTES_WEBSOCKET_URL = 'wss://webquotes.geeksoft.pl/websocket/quotes';
 const MIN_RECONNECT_DELAY_MS = 1000;
 const MAX_RECONNECT_DELAY_MS = 30000;
+const CONNECTION_CLOSED_MESSAGE = 'Quotes WebSocket connection closed';
 
 const SUBSCRIBE_ADD_LIST_PATH = '/subscribe/addlist';
 const SUBSCRIBE_REMOVE_LIST_PATH = '/subscribe/removelist';
@@ -47,11 +48,13 @@ export class QuotesSocket {
     },
   });
 
-  // retry() only intercepts errors, repeat() only intercepts clean completions —
-  // both are needed so a "clean" WebSocket close (code 1000) reconnects too.
+  // A "clean" WebSocket close (code 1000) completes the stream instead of erroring it —
+  // turning it into an error lets a single retry() handle every kind of disconnect with one
+  // backoff. resetOnSuccess restarts that backoff on the first frame after a reconnect, so
+  // occasional drops in a long session don't leave every later reconnect at the max delay.
   readonly quotes$: Observable<Quote[]> = this.socket$.pipe(
-    retry({ delay: (_error, retryCount) => reconnectDelay(retryCount) }),
-    repeat({ delay: (count) => reconnectDelay(count) }),
+    concatWith(throwError(() => new Error(CONNECTION_CLOSED_MESSAGE))),
+    retry({ delay: (_error, retryCount) => reconnectDelay(retryCount), resetOnSuccess: true }),
     map(parseQuotesMessage),
     filter((quotes) => quotes.length > 0),
   );

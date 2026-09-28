@@ -179,4 +179,58 @@ describe('QuotesSocket', () => {
 
     expect(currentSocket().sent).toEqual([{ p: '/subscribe/addlist', d: ['ETHUSD'] }]);
   });
+
+  describe('reconnect backoff', () => {
+    const QUOTES_FRAME = { p: '/quotes/subscribed', d: [{ s: 'BTCUSD', b: 100, a: 101, t: 123 }] };
+
+    function expectReconnectAfter(delayMs: number): void {
+      const socketCount = FakeWebSocket.instances.length;
+
+      vi.advanceTimersByTime(delayMs - 1);
+      expect(FakeWebSocket.instances.length).toBe(socketCount);
+
+      vi.advanceTimersByTime(1);
+      expect(FakeWebSocket.instances.length).toBe(socketCount + 1);
+    }
+
+    it('doubles the delay while reconnect attempts keep failing', () => {
+      new QuotesSocket().quotes$.subscribe();
+
+      currentSocket().simulateClose(false);
+      expectReconnectAfter(1000);
+
+      currentSocket().simulateClose(false);
+      expectReconnectAfter(2000);
+    });
+
+    it('starts again from the minimum delay after a connection that received data', () => {
+      new QuotesSocket().quotes$.subscribe();
+
+      currentSocket().simulateClose(false);
+      expectReconnectAfter(1000);
+      currentSocket().simulateClose(false);
+      expectReconnectAfter(2000);
+
+      currentSocket().simulateOpen();
+      currentSocket().simulateMessage(QUOTES_FRAME);
+      currentSocket().simulateClose(false);
+
+      expectReconnectAfter(1000);
+    });
+
+    it('shares one backoff between clean and unclean closes, and resets it the same way', () => {
+      new QuotesSocket().quotes$.subscribe();
+
+      currentSocket().simulateClose(true);
+      expectReconnectAfter(1000);
+      currentSocket().simulateClose(false);
+      expectReconnectAfter(2000);
+
+      currentSocket().simulateOpen();
+      currentSocket().simulateMessage(QUOTES_FRAME);
+      currentSocket().simulateClose(true);
+
+      expectReconnectAfter(1000);
+    });
+  });
 });
