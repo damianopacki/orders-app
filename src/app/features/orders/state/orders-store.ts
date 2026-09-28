@@ -63,7 +63,26 @@ export const OrdersStore = signalStore(
       return newOrder;
     },
     removeOrder(id: number): void {
-      patchState(store, removeEntity(id));
+      // The index signature hides it, but the id may not exist — hence the explicit undefined.
+      const removedOrder: Order | undefined = store.entityMap()[id];
+      if (removedOrder === undefined) {
+        return;
+      }
+
+      const { symbol } = removedOrder;
+      const hasOtherOrdersOfSymbol = store
+        .entities()
+        .some((order) => order.symbol === symbol && order.id !== id);
+
+      // A group vanishes with its last order, so its expanded flag goes too — otherwise a
+      // later order for the same symbol would bring the group back already expanded.
+      patchState(
+        store,
+        removeEntity(id),
+        hasOtherOrdersOfSymbol
+          ? {}
+          : { expandedSymbols: withoutSymbol(store.expandedSymbols(), symbol) },
+      );
     },
     removeGroup(symbol: string): number[] {
       const idsToRemove = store

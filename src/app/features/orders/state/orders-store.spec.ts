@@ -137,6 +137,44 @@ describe('OrdersStore', () => {
     expect(store.entities().map((order) => order.id)).toEqual([2]);
   });
 
+  it('removeOrder clears the symbol from expandedSymbols when its last order is closed', () => {
+    const store = setup({
+      getOrders: () =>
+        of([buildOrder({ id: 1, symbol: 'BTCUSD' }), buildOrder({ id: 2, symbol: 'ETHUSD' })]),
+    });
+    store.load();
+    store.toggleGroup('BTCUSD');
+    store.toggleGroup('ETHUSD');
+
+    store.removeOrder(1);
+
+    expect(store.expandedSymbols()).toEqual(['ETHUSD']);
+  });
+
+  it('removeOrder keeps the group expanded while it still has other orders', () => {
+    const store = setup({
+      getOrders: () =>
+        of([buildOrder({ id: 1, symbol: 'BTCUSD' }), buildOrder({ id: 2, symbol: 'BTCUSD' })]),
+    });
+    store.load();
+    store.toggleGroup('BTCUSD');
+
+    store.removeOrder(1);
+
+    expect(store.expandedSymbols()).toEqual(['BTCUSD']);
+  });
+
+  it('a new order for a symbol whose last order was closed starts collapsed', () => {
+    const store = setup({ getOrders: () => of([buildOrder({ id: 1, symbol: 'ETHUSD' })]) });
+    store.load();
+    store.toggleGroup('ETHUSD');
+
+    store.removeOrder(1);
+    store.addOrder({ ...NEW_ORDER, symbol: 'ETHUSD' });
+
+    expect(store.expandedSymbols()).toEqual([]);
+  });
+
   it('removeGroup removes every order for a symbol and clears it from expandedSymbols', () => {
     const store = setup({
       getOrders: () =>
