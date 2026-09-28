@@ -8,10 +8,10 @@
   #dialog
   class="add-order-dialog"
   aria-labelledby="add-order-dialog-title"
+  (pointerdown)="onBackdropPointerDown($event)"
   (click)="onBackdropClick($event)"
 >
-  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
-  <div class="add-order-dialog__panel" (click)="$event.stopPropagation()">
+  <div class="add-order-dialog__panel">
     <div class="add-order-dialog__header">
       <h2 id="add-order-dialog-title">Dodaj zlecenie</h2>
       <button type="button" class="add-order-dialog__close" aria-label="Zamknij" (click)="close()">

@@ -48,9 +48,36 @@ describe('AddOrderDialog', () => {
     setup();
     const closeSpy = vi.spyOn(HTMLDialogElement.prototype, 'close');
 
+    dialogElement().dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
     dialogElement().dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(closeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('stays open when a press starts inside the panel and is released on the backdrop', () => {
+    setup();
+    const closeSpy = vi.spyOn(HTMLDialogElement.prototype, 'close');
+
+    // The browser targets such a click at the nearest common ancestor — the <dialog>.
+    fixture.nativeElement
+      .querySelector('input[formControlName="size"]')
+      .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    dialogElement().dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(closeSpy).not.toHaveBeenCalled();
+  });
+
+  it('does not treat an earlier backdrop press as the start of a later click', () => {
+    setup();
+    const closeSpy = vi.spyOn(HTMLDialogElement.prototype, 'close');
+
+    dialogElement().dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    fixture.nativeElement
+      .querySelector('.add-order-dialog__panel')
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    dialogElement().dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(closeSpy).not.toHaveBeenCalled();
   });
 
   it('does not close when clicking inside the panel', () => {

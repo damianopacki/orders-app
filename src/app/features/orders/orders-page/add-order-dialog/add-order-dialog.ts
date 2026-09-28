@@ -24,6 +24,7 @@ export class AddOrderDialog {
   readonly submitted = output<NewOrder>();
 
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
+  private pointerDownOnBackdrop = false;
 
   open(): void {
     this.dialog().nativeElement.showModal();
@@ -38,8 +39,18 @@ export class AddOrderDialog {
     this.close();
   }
 
+  protected onBackdropPointerDown(event: PointerEvent): void {
+    this.pointerDownOnBackdrop = event.target === this.dialog().nativeElement;
+  }
+
+  // A press that starts inside the panel and is released on the backdrop still fires a
+  // click whose target is the <dialog> (the nearest common ancestor), so the target check
+  // alone would close the dialog — the press has to have started on the backdrop too.
   protected onBackdropClick(event: MouseEvent): void {
-    if (event.target === this.dialog().nativeElement) {
+    const startedOnBackdrop = this.pointerDownOnBackdrop;
+    this.pointerDownOnBackdrop = false;
+
+    if (startedOnBackdrop && event.target === this.dialog().nativeElement) {
       this.close();
     }
   }
