@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
 import { MarketDataApi } from '@orders/data/market-data-api';
-import type { Order } from '../models/order';
+import type { NewOrder, Order } from '../models/order';
 import { OrdersStore } from './orders-store';
 
 function buildOrder(overrides: Partial<Order>): Order {
@@ -17,6 +17,15 @@ function buildOrder(overrides: Partial<Order>): Order {
     ...overrides,
   };
 }
+
+const NEW_ORDER: NewOrder = {
+  symbol: 'ETHUSD',
+  side: 'BUY',
+  size: 1,
+  openPrice: 10,
+  openTime: 0,
+  swap: 0,
+};
 
 describe('OrdersStore', () => {
   function setup(marketDataApi: Partial<MarketDataApi>) {
@@ -94,6 +103,29 @@ describe('OrdersStore', () => {
     store.addOrder({ symbol: 'BTCUSD', side: 'BUY', size: 1, openPrice: 10, openTime: 0, swap: 0 });
 
     expect(store.entities()[0].id).toBe(1);
+  });
+
+  it('addOrder assigns consecutive ids to consecutive orders', () => {
+    const store = setup({ getOrders: () => of([buildOrder({ id: 5 })]) });
+    store.load();
+
+    const first = store.addOrder({ ...NEW_ORDER });
+    const second = store.addOrder({ ...NEW_ORDER });
+
+    expect([first.id, second.id]).toEqual([6, 7]);
+  });
+
+  it('addOrder never reuses the id of a closed order', () => {
+    const store = setup({ getOrders: () => of([buildOrder({ id: 1 }), buildOrder({ id: 5 })]) });
+    store.load();
+
+    store.removeOrder(5);
+    const afterRemoveOrder = store.addOrder({ ...NEW_ORDER });
+    store.removeGroup(NEW_ORDER.symbol);
+    const afterRemoveGroup = store.addOrder({ ...NEW_ORDER });
+
+    expect(afterRemoveOrder.id).toBe(6);
+    expect(afterRemoveGroup.id).toBe(7);
   });
 
   it('removeOrder removes a single order', () => {

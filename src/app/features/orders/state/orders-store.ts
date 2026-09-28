@@ -11,7 +11,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 
 import { MarketDataApi } from '@orders/data/market-data-api';
-import { getNextOrderId } from '@orders/utils/get-next-order-id';
+import { getMaxOrderId } from '@orders/utils/get-max-order-id';
 import { compareSymbols, getUniqueSymbols } from '@orders/utils/get-unique-symbols';
 import { trackCallState, withCallState } from '@shared/state/with-call-state';
 
@@ -20,11 +20,15 @@ import type { NewOrder, Order } from '../models/order';
 interface OrdersAdditionalState {
   readonly expandedSymbols: string[];
   readonly availableSymbols: string[];
+  // Not derivable from the current entities: closed orders keep their ids reserved, so the
+  // highest id ever assigned has to be remembered to never hand it out again.
+  readonly lastOrderId: number;
 }
 
 const initialState: OrdersAdditionalState = {
   expandedSymbols: [],
   availableSymbols: [],
+  lastOrderId: 0,
 };
 
 function withoutSymbol(symbols: readonly string[], symbol: string): string[] {
@@ -45,6 +49,7 @@ export const OrdersStore = signalStore(
             tap((orders) => {
               patchState(store, setAllEntities(orders), {
                 availableSymbols: getUniqueSymbols(orders).sort(compareSymbols),
+                lastOrderId: getMaxOrderId(orders),
               });
             }),
             trackCallState(store),
@@ -53,8 +58,8 @@ export const OrdersStore = signalStore(
       ),
     ),
     addOrder(order: NewOrder): Order {
-      const newOrder: Order = { ...order, id: getNextOrderId(store.entities()) };
-      patchState(store, addEntity(newOrder));
+      const newOrder: Order = { ...order, id: store.lastOrderId() + 1 };
+      patchState(store, addEntity(newOrder), { lastOrderId: newOrder.id });
       return newOrder;
     },
     removeOrder(id: number): void {
